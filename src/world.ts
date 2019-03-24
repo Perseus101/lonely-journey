@@ -25,8 +25,8 @@ export class World {
 
     this.remapped_controls.keys = controls.keys;
     this.remapped_controls.mouse_down = controls.mouse_down;
-    this.remapped_controls.mouse_x = controls.mouse_x + this.camera.x - (this.app.renderer.width / 2); //transform to world coordinates
-    this.remapped_controls.mouse_y = controls.mouse_y + this.camera.y - (this.app.renderer.height / 2); //transform to world coordinates
+    this.remapped_controls.mouse_x = (controls.mouse_x - this.app.renderer.width / 2) / this.camera.scale + this.camera.x; //transform to world coordinates
+    this.remapped_controls.mouse_y = (controls.mouse_y - this.app.renderer.height / 2) / this.camera.scale + this.camera.y; //transform to world coordinates
 
     if (controls.keys["Escape"]) {
       this.camera.x = this.children[0].x;
