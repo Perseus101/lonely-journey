@@ -40,17 +40,27 @@ export class Stars {
   container: PIXI.particles.ParticleContainer;
   starGraphic: any;
   stars: any[] = [];
-  last_camera: Camera;
+  bufferStars: any[] = [];
+  lastCamera: Camera;
 
   starSettings = {
-    numParticles: 1000,
+    numParticles: 250,
     alphaMin: 0.1,
-    alphaMax: .7,
+    alphaMax: 0.7,
+    sizeChangeSpeed: 0.05,
   };
 
   constructor(app: PIXI.Application) {
     this.app = app;
-    this.container = new PIXI.particles.ParticleContainer();
+    this.container = new PIXI.particles.ParticleContainer(
+      2 * this.starSettings.numParticles,
+      {
+        rotation: false,
+        // alphaAndtint: true,
+        scale: true,
+        uvs: false
+      }
+    );
 
     for (let i = 0; i < this.starSettings.numParticles; ++i) {
       this.newStar();
@@ -59,35 +69,68 @@ export class Stars {
     this.app.stage.addChild(this.container);
   }
 
-  draw(camera: Camera) {
-    if (this.last_camera) {
+  tick(delta: number, camera: Camera) {
+    if (this.lastCamera) {
       //update scaling
-      if (camera.scale != this.last_camera.scale) {
-        let ratio = camera.scale / this.last_camera.scale;
+      if (camera.scale != this.lastCamera.scale) {
+        let ratio = camera.scale / this.lastCamera.scale;
         for (let star of this.stars) {
           star.position.x = ratio * (star.position.x - this.app.renderer.width / 2) + this.app.renderer.width / 2;
           star.position.y = ratio * (star.position.y - this.app.renderer.height / 2) + this.app.renderer.height / 2;
         }
 
         //correct for zooming in
-        if (camera.scale > this.last_camera.scale) {
+        if (camera.scale > this.lastCamera.scale) {
           for (let star of this.stars) {
             if (star.position.x < 0 || star.position.x >= this.app.renderer.width || star.position.y < 0 || star.position.y >= this.app.renderer.height) {
               star.pX = Math.random();
               star.pY = Math.random();
               star.position.x = this.app.renderer.width * star.pX;
               star.position.y = this.app.renderer.height * star.pY;
+              star.isSpawning = true;
+              star.isDespawning = false;
+              star.scale.x = 0;
+              star.scale.y = 0;
+            }
+
+            //update spawning
+            if (star.isSpawning) {
+              star.scale.x += this.starSettings.sizeChangeSpeed;
+              star.scale.y += this.starSettings.sizeChangeSpeed;
+              if (star.scale.x >= star.ogScale || star.scale.y >= star.ogScale) {
+                star.scale.x = star.ogScale;
+                star.scale.y = star.ogScale;
+                star.isSpawning = false;
+              }
             }
           }
         } else {
           let p = 1 - ratio*ratio;
           let n = this.starSettings.numParticles;
           let numToRespawn = Math.min(Math.max(Math.round(randomGauss() * Math.sqrt(n * p * (1 - p)) + p*n), 0), n);
-          console.log(ratio, numToRespawn);
+          // console.log(ratio, numToRespawn);
 
-          let fun = makeRandomRange(n);
+          let fun = makeRandomRange(this.stars.length);
+          let misses = 0;
           for (let i = 0; i < numToRespawn; i++) {
-            let star = this.stars[fun()];
+            //mark a random star to despawn to balance it out
+            let despawnStar = this.stars[fun()];
+            while (despawnStar.isInBuffer || despawnStar.isDespawning) {
+              despawnStar = this.stars[fun()];
+              misses += 1;
+            }
+            despawnStar.isDespawning = true;
+            despawnStar.isSpawning = false;
+
+            //now get an unused star, or make one
+            let star: any;
+            if (this.bufferStars.length > 0) {
+              star = this.bufferStars.pop();
+              this.newProperties(star);
+            } else {
+              star = this.newStar();
+            }
+
             let range = (1 - ratio) / 2;
             let offset = ratio / 2;
 
@@ -105,20 +148,46 @@ export class Stars {
             star.position.x = this.app.renderer.width * star.pX;
             star.position.y = this.app.renderer.height * star.pY;
           }
+
+          console.log("Misses: " + misses, " bufferStars: " + this.bufferStars.length);
+        }
+
+        for (let star of this.stars) {
+          //update despawning
+          if (star.isDespawning) {
+            star.scale.x -= this.starSettings.sizeChangeSpeed;
+            star.scale.y -= this.starSettings.sizeChangeSpeed;
+            if (star.scale.x <= 0 || star.scale.y <= 0) {
+              star.scale.x = 0;
+              star.scale.y = 0;
+              star.isSpawning = false;
+              star.isDespawning = false;
+              star.isInBuffer = true;
+              this.bufferStars.push(star);
+            }
+          }
         }
       }
 
       //update position
       for (let star of this.stars) {
-        star.position.x += camera.scale * (this.last_camera.x - camera.x);
-        star.position.y += camera.scale * (this.last_camera.y - camera.y);
+        star.position.x += camera.scale * (this.lastCamera.x - camera.x);
+        star.position.y += camera.scale * (this.lastCamera.y - camera.y);
 
-        star.position.x = wrap(star.position.x, this.app.renderer.width);
-        star.position.y = wrap(star.position.y, this.app.renderer.height);
+        if (star.position.x < 0 || star.position.x >= this.app.renderer.width) {
+          star.position.x = wrap(star.position.x, this.app.renderer.width);
+          star.pY = Math.random();
+          star.position.y = this.app.renderer.height * star.pY;
+        }
+        if (star.position.y < 0 || star.position.y >= this.app.renderer.height) {
+          star.position.y = wrap(star.position.y, this.app.renderer.height);
+          star.pX = Math.random();
+          star.position.x = this.app.renderer.width * star.pX;
+        }
       }
 
       //update last camera store
-      camera.clone_into(this.last_camera);
+      camera.clone_into(this.lastCamera);
     } else {
       //set initial positions
       for (let star of this.stars) {
@@ -126,19 +195,27 @@ export class Stars {
         star.position.y = this.app.renderer.height * star.pY;
       }
 
-      this.last_camera = camera.clone();
+      this.lastCamera = camera.clone();
     }
   }
 
   newStar() {
-    var settings = this.starSettings;
     var texture = PIXI.Texture.fromCanvas(this.getStarGraphic());
     var star: any = new PIXI.Sprite(texture);
+    star.id = Math.random();
+    this.newProperties(star);
+    this.container.addChild(star);
+    this.stars.push(star);
+    return star;
+  }
+
+  newProperties(star: any) {
+    var settings = this.starSettings;
     var scale = 0.3 + Math.random() * 0.7;
 
-    this.container.addChild(star);
     star.anchor.x = 0.5;
     star.anchor.y = 0.5;
+    star.ogScale = scale;
     star.scale.x = scale;
     star.scale.y = scale;
     star.alpha = (settings.alphaMax - settings.alphaMin) * Math.random() + settings.alphaMin;
@@ -147,8 +224,9 @@ export class Stars {
     star.pY = Math.random();
     star.position.x = this.app.renderer.width * star.pX;
     star.position.y = this.app.renderer.height * star.pY;
-    this.stars.push(star);
-    return star;
+    star.isInBuffer = false;
+    star.isDespawning = false;
+    star.isSpawning = false;
   }
 
   getStarGraphic() {

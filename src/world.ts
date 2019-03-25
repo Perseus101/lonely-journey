@@ -10,7 +10,7 @@ export class World {
   children: Sprite[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
-  camera_scale_speed = 0.05;
+  camera_scale_speed = 0.025;
   stars: Stars;
   follow_camera = true;
 
@@ -66,7 +66,7 @@ export class World {
       this.camera.y = this.children[0].y;
     }
 
-    this.stars.draw(this.camera);
+    this.stars.tick(delta, this.camera);
     for (let c of this.children) {
       c.draw(this.camera);
     }
