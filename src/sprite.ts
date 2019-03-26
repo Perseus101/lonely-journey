@@ -14,6 +14,8 @@ export abstract class Sprite {
   constructor(app: PIXI.Application) {
     this.app = app;
     this.pixi_sprite = this.create_sprite();
+    this.pixi_sprite.anchor.x = 0.5;
+    this.pixi_sprite.anchor.y = 0.5;
 
     this.setup();
 

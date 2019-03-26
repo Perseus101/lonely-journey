@@ -108,8 +108,6 @@ export class Stars {
           let p = 1 - ratio*ratio;
           let n = this.starSettings.numParticles;
           let numToRespawn = Math.min(Math.max(Math.round(randomGauss() * Math.sqrt(n * p * (1 - p)) + p*n), 0), n);
-          // console.log(ratio, numToRespawn);
-
           let fun = makeRandomRange(this.stars.length);
           let misses = 0;
           for (let i = 0; i < numToRespawn; i++) {
@@ -143,13 +141,9 @@ export class Stars {
               star.pX = dim2;
               star.pY = dim1;
             }
-
-            // console.log(star.pX, star.pY);
             star.position.x = this.app.renderer.width * star.pX;
             star.position.y = this.app.renderer.height * star.pY;
           }
-
-          console.log("Misses: " + misses, " bufferStars: " + this.bufferStars.length);
         }
 
         for (let star of this.stars) {
@@ -202,7 +196,6 @@ export class Stars {
   newStar() {
     var texture = PIXI.Texture.fromCanvas(this.getStarGraphic());
     var star: any = new PIXI.Sprite(texture);
-    star.id = Math.random();
     this.newProperties(star);
     this.container.addChild(star);
     this.stars.push(star);

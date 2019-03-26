@@ -11,8 +11,6 @@ export class Spaceship extends Sprite {
   setup(): void {
     this.scale = 0.1;
     this.sprite_rotation_offset = Math.PI / 4;
-    this.pixi_sprite.anchor.x = 0.5;
-    this.pixi_sprite.anchor.y = 0.5;
   }
 
   create_sprite(): PIXI.Sprite {

@@ -1,6 +1,16 @@
 import * as PIXI from 'pixi.js';
 
 import * as Spaceship from './spaceship.png';
+import * as SunTexture from './sun.png';
+import * as MercuryTexture from './mercury.png';
+import * as VenusTexture from './venus.png';
+import * as EarthTexture from './earth.png';
+import * as MarsTexture from './mars.png';
+import * as JupiterTexture from './jupiter.png';
+import * as SaturnTexture from './saturn.png';
+import * as UranusTexture from './uranus.png';
+import * as NeptuneTexture from './neptune.png';
+
 import World from './world';
 import {Controls, KeyMap} from './controls';
 
@@ -59,6 +69,15 @@ document.body.appendChild(app.view);
 //load an image and run the `setup` function when it's done
 PIXI.loader
   .add(Spaceship)
+  .add(SunTexture)
+  .add(MercuryTexture)
+  .add(VenusTexture)
+  .add(EarthTexture)
+  .add(MarsTexture)
+  .add(JupiterTexture)
+  .add(SaturnTexture)
+  .add(UranusTexture)
+  .add(NeptuneTexture)
   .load(setup);
 
 //This `setup` function will run when the image has loaded
