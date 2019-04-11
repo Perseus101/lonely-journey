@@ -50,6 +50,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "^3.0.0",
+    "moment-locales-webpack-plugin": "^1.0.7",
     "rimraf": "^2.6.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.22.1",
@@ -79,6 +80,7 @@
   },
   "version": "0.0.1",
   "dependencies": {
+    "moment": "^2.24.0",
     "pixi.js": "^4.8.7"
   }
 }

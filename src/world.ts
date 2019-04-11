@@ -3,12 +3,13 @@ import Camera from "./camera";
 import Spaceship from "./spaceship";
 import { Controls } from "./controls";
 import Stars from "./stars";
-import { Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
+import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
 
 export class World {
   app: PIXI.Application;
   camera: Camera;
   spaceship: Spaceship;
+  bodies: Planet[] = [];
   children: Sprite[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
@@ -20,7 +21,7 @@ export class World {
     this.app = app;
     this.camera = new Camera();
     this.stars = new Stars(app);
-    this.children.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
+    this.bodies.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
     this.spaceship = new Spaceship(app);
   }
 
@@ -72,6 +73,13 @@ export class World {
 
     this.stars.tick(delta, this.camera);
     this.spaceship.draw(this.camera);
+
+    for (let c of this.bodies) {
+      c.update(delta);
+      c.draw(this.camera);
+    }
+
+
     for (let c of this.children) {
       c.draw(this.camera);
     }
