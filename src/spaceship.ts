@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Sprite from './sprite';
-import * as SpaceshipTexture from './spaceship.png';
+import * as SpaceshipTexture from './images/spaceship.png';
 import { Controls } from './controls';
 
 export class Spaceship extends Sprite {
