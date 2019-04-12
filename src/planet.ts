@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+
 import Sprite from './sprite';
 import * as SunTexture from './sun.png';
 import * as MercuryTexture from './mercury.png';
@@ -9,10 +10,21 @@ import * as JupiterTexture from './jupiter.png';
 import * as SaturnTexture from './saturn.png';
 import * as UranusTexture from './uranus.png';
 import * as NeptuneTexture from './neptune.png';
-import Controls from './controls';
+import Telemetry from './telemetry';
 
 export abstract class Planet extends Sprite {
-  update(delta: number, controls: Controls): void {
+  telemetry: Telemetry;
+
+  update(delta: number) {
+    if (this.telemetry === undefined) {
+      return;
+    }
+    let data = this.telemetry.getData();
+    if (data === undefined) {
+      return;
+    }
+    this.x = data.distance * Math.cos(data.ra);
+    this.y = data.distance * Math.sin(data.ra);
   }
 }
 
@@ -31,6 +43,7 @@ export class Sun extends Planet {
 
 export class Mercury extends Planet {
   setup() {
+    this.telemetry = new Telemetry(199);
     this.scale = 1;
     this.x = 0;
     this.y = 1000;
@@ -43,6 +56,7 @@ export class Mercury extends Planet {
 
 export class Venus extends Planet {
   setup() {
+    this.telemetry = new Telemetry(299);
     this.scale = 1;
     this.x = 0;
     this.y = 2000;
@@ -55,6 +69,7 @@ export class Venus extends Planet {
 
 export class Earth extends Planet {
   setup() {
+    this.telemetry = new Telemetry(399);
     this.scale = 1;
     this.x = 0;
     this.y = 3000;
@@ -67,6 +82,7 @@ export class Earth extends Planet {
 
 export class Mars extends Planet {
   setup() {
+    this.telemetry = new Telemetry(499);
     this.scale = 1;
     this.x = 0;
     this.y = 4000;
@@ -79,6 +95,7 @@ export class Mars extends Planet {
 
 export class Jupiter extends Planet {
   setup() {
+    this.telemetry = new Telemetry(599);
     this.scale = 1;
     this.x = 0;
     this.y = 5000;
@@ -91,6 +108,7 @@ export class Jupiter extends Planet {
 
 export class Saturn extends Planet {
   setup() {
+    this.telemetry = new Telemetry(699);
     this.scale = 1;
     this.x = 0;
     this.y = 6000;
@@ -103,6 +121,7 @@ export class Saturn extends Planet {
 
 export class Uranus extends Planet {
   setup() {
+    this.telemetry = new Telemetry(799);
     this.scale = 1;
     this.x = 0;
     this.y = 7000;
@@ -115,6 +134,7 @@ export class Uranus extends Planet {
 
 export class Neptune extends Planet {
   setup() {
+    this.telemetry = new Telemetry(899);
     this.scale = 1;
     this.x = 0;
     this.y = 8000;
@@ -124,7 +144,6 @@ export class Neptune extends Planet {
     return new PIXI.Sprite(PIXI.loader.resources[NeptuneTexture].texture);
   }
 }
-
 
 export default Planet;
 
