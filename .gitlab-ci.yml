@@ -7,7 +7,7 @@ pages:
   stage: deploy
   script:
   - npm install
-  - npm run-script build
+  - npm run-script build:prod
   - mkdir .public
   - cp -r dist/* .public/.
   - mv .public public
