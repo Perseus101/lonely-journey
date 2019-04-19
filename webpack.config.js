@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
 
@@ -14,6 +15,7 @@ const plugins = [
     title: 'Typescript Webpack Starter',
     template: '!!ejs-loader!src/index.html'
   }),
+  new MomentLocalesPlugin(),
   new webpack.LoaderOptionsPlugin({
     options: {
       tslint: {
