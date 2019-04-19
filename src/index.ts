@@ -1,15 +1,15 @@
 import * as PIXI from 'pixi.js';
 
-import * as Spaceship from './spaceship.png';
-import * as SunTexture from './sun.png';
-import * as MercuryTexture from './mercury.png';
-import * as VenusTexture from './venus.png';
-import * as EarthTexture from './earth.png';
-import * as MarsTexture from './mars.png';
-import * as JupiterTexture from './jupiter.png';
-import * as SaturnTexture from './saturn.png';
-import * as UranusTexture from './uranus.png';
-import * as NeptuneTexture from './neptune.png';
+import * as Spaceship from './images/spaceship.png';
+import * as SunTexture from './images/sun.png';
+import * as MercuryTexture from './images/mercury.png';
+import * as VenusTexture from './images/venus.png';
+import * as EarthTexture from './images/earth.png';
+import * as MarsTexture from './images/mars.png';
+import * as JupiterTexture from './images/jupiter.png';
+import * as SaturnTexture from './images/saturn.png';
+import * as UranusTexture from './images/uranus.png';
+import * as NeptuneTexture from './images/neptune.png';
 
 import World from './world';
 import {Controls, KeyMap} from './controls';

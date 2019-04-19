@@ -59,7 +59,12 @@ var config = {
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
-          'file-loader'
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]',
+            },
+          },
         ]
       }
     ].filter(Boolean)

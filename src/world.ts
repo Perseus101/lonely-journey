@@ -75,7 +75,7 @@ export class World {
     this.spaceship.draw(this.camera);
 
     for (let c of this.bodies) {
-      c.update(delta);
+      c.update(delta, this.remapped_controls);
       c.draw(this.camera);
     }
 
