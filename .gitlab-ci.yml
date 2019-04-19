@@ -6,7 +6,7 @@ pages:
     - node_modules/
   stage: deploy
   script:
-  - npm install --only=production
+  - npm install
   - npm run-script build:prod
   - mkdir .public
   - cp -r dist/* .public/.
