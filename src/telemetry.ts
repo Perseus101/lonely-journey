@@ -62,7 +62,7 @@ function parseToData(cells: string[]): DataPacket {
     // Parse light-minutes and convert to distance
     let lt = parseFloat(ltString);
     // c * (60 seconds / 1 minutes) * lt minutes
-    let distance = 3e8/100000000 * 60 * lt;
+    let distance = 3e8 * 60 * lt;
     return new DataPacket(ra, distance);
 }
 

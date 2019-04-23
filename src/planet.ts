@@ -16,6 +16,7 @@ import Telemetry from './telemetry';
 
 export abstract class Planet extends Sprite {
   telemetry: Telemetry;
+  mass: number; //in kg
 
   update(delta: number, controls: Controls) {
     if (this.telemetry === undefined) {
@@ -31,8 +32,11 @@ export abstract class Planet extends Sprite {
 }
 
 export class Sun extends Planet {
+  mass = 1.9891e30;
+
   setup() {
     this.scale = 1;
+    this.minScale = 0.025;
     this.x = 0;
     this.y = 0;
   }
@@ -44,11 +48,14 @@ export class Sun extends Planet {
 }
 
 export class Mercury extends Planet {
+  mass = 3.285e23;
+
   setup() {
     this.telemetry = new Telemetry(199);
     this.scale = 1;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 1000;
+    this.y = 100000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -57,11 +64,14 @@ export class Mercury extends Planet {
 }
 
 export class Venus extends Planet {
+  mass = 4.867e24;
+
   setup() {
     this.telemetry = new Telemetry(299);
     this.scale = 1;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 2000;
+    this.y = 200000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -70,11 +80,14 @@ export class Venus extends Planet {
 }
 
 export class Earth extends Planet {
+  mass = 5.972e24;
+
   setup() {
     this.telemetry = new Telemetry(399);
     this.scale = 1;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 3000;
+    this.y = 300000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -83,11 +96,14 @@ export class Earth extends Planet {
 }
 
 export class Mars extends Planet {
+  mass = 6.39e23;
+
   setup() {
     this.telemetry = new Telemetry(499);
     this.scale = 1;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 4000;
+    this.y = 400000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -96,11 +112,14 @@ export class Mars extends Planet {
 }
 
 export class Jupiter extends Planet {
+  mass = 1.9e27;
+
   setup() {
     this.telemetry = new Telemetry(599);
     this.scale = 5;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 5000;
+    this.y = 500000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -109,11 +128,14 @@ export class Jupiter extends Planet {
 }
 
 export class Saturn extends Planet {
+  mass = 5.683e26;
+
   setup() {
     this.telemetry = new Telemetry(699);
     this.scale = 4;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 6000;
+    this.y = 600000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -122,11 +144,14 @@ export class Saturn extends Planet {
 }
 
 export class Uranus extends Planet {
+  mass = 8.681e25;
+
   setup() {
     this.telemetry = new Telemetry(799);
     this.scale = 3;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 7000;
+    this.y = 700000000000;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -135,11 +160,14 @@ export class Uranus extends Planet {
 }
 
 export class Neptune extends Planet {
+  mass = 1.024e26;
+
   setup() {
     this.telemetry = new Telemetry(899);
     this.scale = 3;
+    this.minScale = 0.05;
     this.x = 0;
-    this.y = 8000;
+    this.y = 800000000000;
   }
 
   create_sprite(): PIXI.Sprite {

@@ -9,20 +9,21 @@ export class World {
   app: PIXI.Application;
   camera: Camera;
   spaceship: Spaceship;
-  bodies: Planet[] = [];
+  planets: Planet[] = [];
   children: Sprite[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
   camera_scale_speed = 0.025;
   stars: Stars;
   follow_camera = true;
+  timeAccel = 365 * 24 * 60 / 20; // 1 year in 10 seconds
 
   constructor(app: PIXI.Application) {
     this.app = app;
     this.camera = new Camera();
     this.stars = new Stars(app);
-    this.bodies.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
-    this.spaceship = new Spaceship(app);
+    this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
+    this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
   }
 
   tick(delta: number, controls: Controls): void {
@@ -65,6 +66,9 @@ export class World {
     for (let c of this.children) {
       c.update(delta, this.remapped_controls);
     }
+    for (let c of this.planets) {
+      c.update(delta, this.remapped_controls);
+    }
 
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;
@@ -74,13 +78,10 @@ export class World {
     this.stars.tick(delta, this.camera);
     this.spaceship.draw(this.camera);
 
-    for (let c of this.bodies) {
-      c.update(delta, this.remapped_controls);
+    for (let c of this.children) {
       c.draw(this.camera);
     }
-
-
-    for (let c of this.children) {
+    for (let c of this.planets) {
       c.draw(this.camera);
     }
   }
