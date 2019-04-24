@@ -2,15 +2,29 @@ import * as PIXI from 'pixi.js';
 import Sprite from './sprite';
 import * as SpaceshipTexture from './images/spaceship.png';
 import { Controls } from './controls';
+import { Planet } from './planet';
 
 export class Spaceship extends Sprite {
-  vx = 0;
+  vx = 30000;
   vy = 0;
-  accel = 0.2;
+  accel = 0.5e-1;
+  planets: Planet[];
+  G = 6.67408e-11;
+  timeAccel: number;
+
+  constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
+    super(app);
+
+    this.planets = planets;
+    this.timeAccel = timeAccel;
+    this.x = 0;
+    this.y = 150000000000;
+  }
 
   setup(): void {
     this.scale = 0.1;
     this.sprite_rotation_offset = Math.PI / 4;
+    this.minScale = 0.05;
   }
 
   create_sprite(): PIXI.Sprite {
@@ -24,12 +38,21 @@ export class Spaceship extends Sprite {
     this.rotation = angle;
 
     if (controls.keys["Space"] || controls.mouse_down) {
-      this.vy += Math.sin(angle) * this.accel;
-      this.vx += Math.cos(angle) * this.accel;
+      this.vy += Math.sin(angle) * delta * this.accel * this.timeAccel;
+      this.vx += Math.cos(angle) * delta * this.accel * this.timeAccel;
     }
 
-    this.y += this.vy * delta;
-    this.x += this.vx * delta;
+    for (let planet of this.planets) {
+      let accel = this.G * planet.mass / (Math.pow(planet.x - this.x, 2) + Math.pow(planet.y - this.y, 2));
+      if (planet.y - this.y != 0 && planet.x - this.x != 0) {
+        let angle = Math.atan2(planet.y - this.y, planet.x - this.x);
+        this.vy += Math.sin(angle) * delta * accel * this.timeAccel;
+        this.vx += Math.cos(angle) * delta * accel * this.timeAccel;
+      }
+    }
+
+    this.y += this.vy * delta * this.timeAccel;
+    this.x += this.vx * delta * this.timeAccel;
   }
 }
 

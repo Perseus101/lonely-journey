@@ -53,7 +53,7 @@ export class Stars {
   constructor(app: PIXI.Application) {
     this.app = app;
     this.container = new PIXI.particles.ParticleContainer(
-      2 * this.starSettings.numParticles,
+      4 * this.starSettings.numParticles,
       {
         rotation: false,
         // alphaAndtint: true,

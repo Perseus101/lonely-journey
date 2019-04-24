@@ -10,20 +10,21 @@ export class World {
   date: Date;
   camera: Camera;
   spaceship: Spaceship;
-  bodies: Planet[] = [];
+  planets: Planet[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
   camera_scale_speed = 0.025;
   stars: Stars;
   follow_camera = true;
+  timeAccel = 365 * 24 * 60 / 10; // 1 year in 10 seconds
 
   constructor(app: PIXI.Application) {
     this.app = app;
     this.date = new Date(1960, 0, 1, 0, 0, 0, 0);
     this.camera = new Camera();
     this.stars = new Stars(app);
-    this.bodies.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
-    this.spaceship = new Spaceship(app);
+    this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
+    this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
   }
 
   tick(delta: number, controls: Controls) {
@@ -65,6 +66,9 @@ export class World {
     }
 
     this.spaceship.update(delta, this.remapped_controls);
+    for (let c of this.planets) {
+      c.update(this.date, this.remapped_controls);
+    }
 
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;
@@ -74,7 +78,7 @@ export class World {
     this.stars.tick(delta, this.camera);
     this.spaceship.draw(this.camera);
 
-    for (let c of this.bodies) {
+    for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
       c.draw(this.camera);
     }
