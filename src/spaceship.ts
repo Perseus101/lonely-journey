@@ -7,7 +7,9 @@ import { Planet } from './planet';
 export class Spaceship extends Sprite {
   vx = 30000;
   vy = 0;
-  accel = 0.5e-1;
+  accel1 = 2e-3;
+  accel2 = 1e-2;
+  accel3 = 5e-2;
   planets: Planet[];
   G = 6.67408e-11;
   timeAccel: number;
@@ -32,7 +34,7 @@ export class Spaceship extends Sprite {
     return new PIXI.Sprite(PIXI.loader.resources[SpaceshipTexture].texture);
   }
 
-  update(delta: number, controls: Controls): void {
+  update(delta: number, controls: Controls, thrusterPower: number): void {
     let xdiff = controls.mouse_x - this.x;
     let ydiff = controls.mouse_y - this.y;
     let angle = Math.atan2(ydiff, xdiff);
@@ -41,8 +43,17 @@ export class Spaceship extends Sprite {
     let num_updates = 5;
     for (let i = 0; i < num_updates; i++) {
       if (controls.keys["Space"] || controls.mouse_down) {
-        this.vy += Math.sin(angle) * delta * this.accel * this.timeAccel / num_updates;
-        this.vx += Math.cos(angle) * delta * this.accel * this.timeAccel / num_updates;
+        let accel;
+        if (thrusterPower == 1)
+          accel = this.accel1;
+        else if (thrusterPower == 2)
+          accel = this.accel2;
+        else if (thrusterPower == 3)
+          accel = this.accel3;
+        else
+          throw "Error, thrusterPower must be 1, 2, or 3. Was " + thrusterPower;
+        this.vy += Math.sin(angle) * delta * accel * this.timeAccel / num_updates;
+        this.vx += Math.cos(angle) * delta * accel * this.timeAccel / num_updates;
       }
 
       for (let planet of this.planets) {
