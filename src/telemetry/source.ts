@@ -10,8 +10,8 @@ export abstract class TelemetrySource {
     }
 
     loadData(startDate: Date, endDate: Date,
-            callback: (timestamp: number, packet: DataPacket) => void): void {
-        this.fetchRawData(startDate, endDate)
+            callback: (timestamp: number, packet: DataPacket) => void): Promise<void> {
+        return this.fetchRawData(startDate, endDate)
             .then((csv: string) => {
                 let lines = csv.split('\n');
                 lines.forEach(line => {

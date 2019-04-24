@@ -79,6 +79,14 @@ export class World {
     });
   }
 
+  await_assets(): Promise<any> {
+    let unresolved: Promise<any>[] = [];
+    for (let p of this.planets) {
+      unresolved.push(p.await_assets());
+    }
+    return Promise.all(unresolved);
+  }
+
   updateDateText() {
     this.dateText.text = moment(this.date).format('YYYY-MM-DD');
   }

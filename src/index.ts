@@ -83,8 +83,9 @@ PIXI.loader
 //This `setup` function will run when the image has loaded
 function setup() {
   let world = new World(app);
-
-  app.ticker.add(delta => world.tick(delta, controls));
+  world.await_assets().then((val: any) => {
+    app.ticker.add(delta => world.tick(delta, controls));
+  })
 }
 
 

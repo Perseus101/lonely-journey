@@ -26,6 +26,10 @@ export abstract class Planet extends Sprite {
     this.x = data.distance * Math.cos(data.ra);
     this.y = data.distance * Math.sin(data.ra);
   }
+
+  await_assets(): Promise<any> {
+    return this.telemetry.await_load();
+  }
 }
 
 export class Sun extends Planet {
@@ -44,6 +48,10 @@ export class Sun extends Planet {
   }
 
   update(date: Date, controls: Controls) {}
+
+  await_assets(): Promise<any> {
+    return Promise.resolve();
+  }
 }
 
 export class Mercury extends Planet {
