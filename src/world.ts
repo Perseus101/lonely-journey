@@ -80,7 +80,7 @@ export class World {
         this.accScroll = this.maxAccScroll;
       if (this.accScroll < -this.maxAccScroll)
         this.accScroll = -this.maxAccScroll;
-      this.camera.scale *= Math.pow(1 + this.camera_scroll_scale_speed * delta, this.accScroll);
+      this.camera.scale *= Math.pow(1 + this.camera_scroll_scale_speed * delta, -this.accScroll);
       this.accScroll = 0;
     }
 
