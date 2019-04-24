@@ -37,22 +37,25 @@ export class Spaceship extends Sprite {
     let angle = Math.atan2(ydiff, xdiff);
     this.rotation = angle;
 
-    if (controls.keys["Space"] || controls.mouse_down) {
-      this.vy += Math.sin(angle) * delta * this.accel * this.timeAccel;
-      this.vx += Math.cos(angle) * delta * this.accel * this.timeAccel;
-    }
-
-    for (let planet of this.planets) {
-      let accel = this.G * planet.mass / (Math.pow(planet.x - this.x, 2) + Math.pow(planet.y - this.y, 2));
-      if (planet.y - this.y != 0 && planet.x - this.x != 0) {
-        let angle = Math.atan2(planet.y - this.y, planet.x - this.x);
-        this.vy += Math.sin(angle) * delta * accel * this.timeAccel;
-        this.vx += Math.cos(angle) * delta * accel * this.timeAccel;
+    let num_updates = 5;
+    for (let i = 0; i < num_updates; i++) {
+      if (controls.keys["Space"] || controls.mouse_down) {
+        this.vy += Math.sin(angle) * delta * this.accel * this.timeAccel / num_updates;
+        this.vx += Math.cos(angle) * delta * this.accel * this.timeAccel / num_updates;
       }
-    }
 
-    this.y += this.vy * delta * this.timeAccel;
-    this.x += this.vx * delta * this.timeAccel;
+      for (let planet of this.planets) {
+        let accel = this.G * planet.mass / (Math.pow(planet.x - this.x, 2) + Math.pow(planet.y - this.y, 2));
+        if (planet.y - this.y != 0 && planet.x - this.x != 0) {
+          let angle = Math.atan2(planet.y - this.y, planet.x - this.x);
+          this.vy += Math.sin(angle) * delta * accel * this.timeAccel / num_updates;
+          this.vx += Math.cos(angle) * delta * accel * this.timeAccel / num_updates;
+        }
+      }
+
+      this.y += this.vy * delta * this.timeAccel / num_updates;
+      this.x += this.vx * delta * this.timeAccel / num_updates;
+    }
   }
 }
 

@@ -14,9 +14,12 @@ export class World {
   remapped_controls = new Controls();
   camera_speed = 10;
   camera_scale_speed = 0.025;
+  camera_scroll_scale_speed = 0.001;
   stars: Stars;
   follow_camera = true;
   timeAccel = 365 * 24 * 60 / 10; // 1 year in 10 seconds
+  accScroll = 0;
+  maxAccScroll = 50;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -25,6 +28,11 @@ export class World {
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
+
+    var self = this;
+    window.addEventListener("wheel", function(e: any) {
+      self.accScroll += e.deltaY;
+    });
   }
 
   tick(delta: number, controls: Controls) {
@@ -63,6 +71,14 @@ export class World {
     }
     if (controls.keys["ControlLeft"]) {
       this.camera.scale *= 1 - (this.camera_scale_speed * delta);
+    }
+    if (this.accScroll != 0) {
+      if (this.accScroll > this.maxAccScroll)
+        this.accScroll = this.maxAccScroll;
+      if (this.accScroll < -this.maxAccScroll)
+        this.accScroll = -this.maxAccScroll;
+      this.camera.scale *= Math.pow(1 + this.camera_scroll_scale_speed * delta, this.accScroll);
+      this.accScroll = 0;
     }
 
     this.spaceship.update(delta, this.remapped_controls);
