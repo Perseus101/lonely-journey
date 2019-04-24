@@ -11,6 +11,7 @@ export class Spaceship extends Sprite {
   planets: Planet[];
   G = 6.67408e-11;
   timeAccel: number;
+  maxAccel = 3;
 
   constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
     super(app);
@@ -46,6 +47,10 @@ export class Spaceship extends Sprite {
 
       for (let planet of this.planets) {
         let accel = this.G * planet.mass / (Math.pow(planet.x - this.x, 2) + Math.pow(planet.y - this.y, 2));
+        if (accel > this.maxAccel) {
+          console.log(accel);
+          accel = this.maxAccel;
+        }
         if (planet.y - this.y != 0 && planet.x - this.x != 0) {
           let angle = Math.atan2(planet.y - this.y, planet.x - this.x);
           this.vy += Math.sin(angle) * delta * accel * this.timeAccel / num_updates;
