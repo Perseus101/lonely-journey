@@ -25,6 +25,7 @@ export class World {
   accScroll = 0;
   maxAccScroll = 50;
   thrusterPower = 3;
+  dateElement: Element;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -37,11 +38,6 @@ export class World {
       fill: '#ffffff', // gradient
     });
 
-    this.dateText = new PIXI.Text('test1', style);
-    this.dateText.text = 'test';
-    this.dateText.x = this.app.screen.width - 200;
-    this.dateText.y = 15;
-    this.app.stage.addChild(this.dateText);
     this.camera = new Camera();
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
@@ -52,6 +48,8 @@ export class World {
     window.addEventListener("wheel", function(e: any) {
       self.accScroll += e.deltaY;
     });
+
+    this.dateElement = document.getElementById("date");
 
     let speed1El = document.getElementById("speed-1");
     let speed2El = document.getElementById("speed-2");
@@ -88,7 +86,7 @@ export class World {
   }
 
   updateDateText() {
-    this.dateText.text = moment(this.date).format('YYYY-MM-DD');
+    this.dateElement.innerHTML = moment(this.date).format('YYYY-MM-DD');
   }
 
   tick(delta: number, controls: Controls) {

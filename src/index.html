@@ -30,7 +30,7 @@
       text-align: center;
     }
 
-    #thruster-text {
+    .hud-title {
       margin: 0;
     }
 
@@ -51,13 +51,46 @@
     .speed-option.speed-activated {
       border-color: #ffffffdd;
     }
+
+    #score-container {
+      position: fixed;
+      z-index: 2;
+      width: 100%;
+      margin: 5px;
+      padding: 5px;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #score-counter {
+      margin: 0px;
+      font-size: 40px;
+    }
+
+    #date-container {
+      right: 0;
+      position: fixed;
+      z-index: 2;
+      margin: 5px;
+      padding: 5px;
+      width: 9em;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #date {
+      margin: 0px;
+      padding-left: 0.15em;
+      font-size: 30px;
+      text-align: left;
+    }
   </style>
 
 </head>
 
 <body style="background-color: #111;">
   <div id="thruster-power">
-    <p id="thruster-text">Thruster Power</p>
+    <p class="hud-title">Thruster Power</p>
     <div id="speed-indicator">
       <div id="speed-1" class="speed-option">
         1
@@ -69,6 +102,14 @@
         3
       </div>
     </div>
+  </div>
+  <div id="score-container">
+    <p class="hud-title">Score</p>
+    <p id="score-counter">0</p>
+  </div>
+  <div id="date-container">
+    <p class="hud-title">Date</p>
+    <p id="date">1960-01-01</p>
   </div>
 </body>
 
