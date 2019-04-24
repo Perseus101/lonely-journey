@@ -1,4 +1,5 @@
-import Sprite from "./sprite";
+import * as moment from 'moment';
+
 import Camera from "./camera";
 import Spaceship from "./spaceship";
 import { Controls } from "./controls";
@@ -8,6 +9,7 @@ import TractorBeam from "./tractor_beam";
 
 export class World {
   app: PIXI.Application;
+  dateText: PIXI.Text;
   date: Date;
   camera: Camera;
   spaceship: Spaceship;
@@ -23,10 +25,19 @@ export class World {
   accScroll = 0;
   maxAccScroll = 50;
   thrusterPower = 3;
+  dateElement: Element;
 
   constructor(app: PIXI.Application) {
     this.app = app;
     this.date = new Date(1960, 0, 1, 0, 0, 0, 0);
+
+    const style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 36,
+      fontWeight: 'bold',
+      fill: '#ffffff', // gradient
+    });
+
     this.camera = new Camera();
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
@@ -37,6 +48,8 @@ export class World {
     window.addEventListener("wheel", function(e: any) {
       self.accScroll += e.deltaY;
     });
+
+    this.dateElement = document.getElementById("date");
 
     let speed1El = document.getElementById("speed-1");
     let speed2El = document.getElementById("speed-2");
@@ -64,9 +77,14 @@ export class World {
     });
   }
 
+  updateDateText() {
+    this.dateElement.innerHTML = moment(this.date).format('YYYY-MM-DD');
+  }
+
   tick(delta: number, controls: Controls) {
     // Update date based on delta
     this.date.setDate(this.date.getDate() + 1);
+    this.updateDateText()
 
     this.remapped_controls.keys = controls.keys;
     this.remapped_controls.mouse_down = controls.mouse_down;
