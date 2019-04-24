@@ -4,12 +4,14 @@ import Spaceship from "./spaceship";
 import { Controls } from "./controls";
 import Stars from "./stars";
 import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
+import TractorBeam from "./tractor_beam";
 
 export class World {
   app: PIXI.Application;
   date: Date;
   camera: Camera;
   spaceship: Spaceship;
+  tractor_beam: TractorBeam;
   planets: Planet[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
@@ -28,6 +30,7 @@ export class World {
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
+    this.tractor_beam = new TractorBeam(app);
 
     var self = this;
     window.addEventListener("wheel", function(e: any) {
@@ -85,6 +88,7 @@ export class World {
     for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
     }
+    this.tractor_beam.update(this.spaceship);
 
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;
@@ -98,6 +102,7 @@ export class World {
       c.update(this.date, this.remapped_controls);
       c.draw(this.camera);
     }
+    this.tractor_beam.draw(this.camera);
   }
 }
 
