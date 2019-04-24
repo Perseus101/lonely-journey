@@ -8,6 +8,9 @@ export class DataPacket {
      * @param other The packet to interpolate between
      */
     interpolate(alpha: number, other: DataPacket): DataPacket {
+        if(other === undefined) {
+            return this;
+        }
         let old_ra = this.ra;
         let new_ra = other.ra;
         if(Math.abs(this.ra - other.ra) > Math.PI) {
