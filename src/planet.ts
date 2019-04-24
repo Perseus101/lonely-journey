@@ -11,17 +11,14 @@ import * as SaturnTexture from './images/saturn.png';
 import * as UranusTexture from './images/uranus.png';
 import * as NeptuneTexture from './images/neptune.png';
 import Controls from './controls';
-import Telemetry from './telemetry';
+import Telemetry from './telemetry/telemetry';
 
 
 export abstract class Planet extends Sprite {
   telemetry: Telemetry;
 
-  update(delta: number, controls: Controls) {
-    if (this.telemetry === undefined) {
-      return;
-    }
-    let data = this.telemetry.getData();
+  update(date: Date, controls: Controls) {
+    let data = this.telemetry.getData(date);
     if (data === undefined) {
       return;
     }
@@ -41,6 +38,8 @@ export class Sun extends Planet {
     let sprite = new PIXI.Sprite(PIXI.loader.resources[SunTexture].texture);
     return sprite;
   }
+
+  update(date: Date, controls: Controls) {}
 }
 
 export class Mercury extends Planet {

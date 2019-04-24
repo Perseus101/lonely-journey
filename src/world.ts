@@ -7,10 +7,10 @@ import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Nept
 
 export class World {
   app: PIXI.Application;
+  date: Date;
   camera: Camera;
   spaceship: Spaceship;
   bodies: Planet[] = [];
-  children: Sprite[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
   camera_scale_speed = 0.025;
@@ -19,13 +19,16 @@ export class World {
 
   constructor(app: PIXI.Application) {
     this.app = app;
+    this.date = new Date(1960, 0, 1, 0, 0, 0, 0);
     this.camera = new Camera();
     this.stars = new Stars(app);
     this.bodies.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
     this.spaceship = new Spaceship(app);
   }
 
-  tick(delta: number, controls: Controls): void {
+  tick(delta: number, controls: Controls) {
+    // Update date based on delta
+    this.date.setDate(this.date.getDate() + 1);
 
     this.remapped_controls.keys = controls.keys;
     this.remapped_controls.mouse_down = controls.mouse_down;
@@ -62,9 +65,6 @@ export class World {
     }
 
     this.spaceship.update(delta, this.remapped_controls);
-    for (let c of this.children) {
-      c.update(delta, this.remapped_controls);
-    }
 
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;
@@ -75,12 +75,7 @@ export class World {
     this.spaceship.draw(this.camera);
 
     for (let c of this.bodies) {
-      c.update(delta, this.remapped_controls);
-      c.draw(this.camera);
-    }
-
-
-    for (let c of this.children) {
+      c.update(this.date, this.remapped_controls);
       c.draw(this.camera);
     }
   }

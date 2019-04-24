@@ -1,5 +1,9 @@
 import * as moment from 'moment';
-import NearestKeyDict from './util/dict';
+
+import NearestKeyDict from '../util/dict';
+
+import DataPacket from './data';
+
 /**
  * A wrapper class for retrieving data from NASA JPL Horizon
  *
@@ -13,39 +17,69 @@ export class Telemetry {
     readonly INITIAL_DATE = new Date(1960, 0, 1, 0, 0, 0, 0);
 
     private data: NearestKeyDict<DataPacket> = new NearestKeyDict();
+    private latestTimestamp: number;
+    private latestDate: Date;
 
     constructor(
         private id: number,
         private interval="10d"
     ) {
         let endDate = new Date(this.INITIAL_DATE);
-        endDate.setFullYear(this.INITIAL_DATE.getFullYear() + 1);
-        this.loadData(this.INITIAL_DATE, endDate);
+        endDate.setFullYear(this.INITIAL_DATE.getFullYear() + 10);
+        this.setLatestDate(endDate);
     }
 
-    loadData(startDate: Date, endDate: Date) {
+    setLatestDate(date: Date) {
+        this.latestTimestamp = moment(date).valueOf();
+        this.latestDate = date;
+    }
+
+    async loadData(startDate: Date, endDate: Date) {
         let startString = moment(startDate).format('YYYY-MM-DD');
         let endString = moment(endDate).format('YYYY-MM-DD');
         let requestURL = `https://cors-anywhere.herokuapp.com/https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1&COMMAND='${this.id}'&QUANTITIES='1,21'&CENTER='500@10'&START_TIME='${startString}'&STOP_TIME='${endString}'&STEP_SIZE='${this.interval}'&CSV_FORMAT='YES'`;
-        fetch(new Request(requestURL, { method: 'GET', }))
+        await fetch(new Request(requestURL, { method: 'GET', }), {cache: "force-cache"})
             .then(response => { return response.text() })
             .then(text => {
                 let regex = /\$\$SOE[\s\S]*\$\$EOE/;
                 let match = text.match(regex)[0];
                 match = match.substring(6, match.length-6);
                 let lines = match.split('\n');
+                let data = null;
                 lines.forEach(line => {
                     line = line.trim();
                     let cells = line.split(",");
-                    let date = moment(cells[0], 'YYYY-MMM-DD HH:mm').valueOf();
-                    this.data.set(date, parseToData(cells));
+                    let timestamp = moment(cells[0], 'YYYY-MMM-DD HH:mm').valueOf();
+                    let packet = parseToData(cells);
+                    this.data.set(timestamp, packet);
+                    data = packet;
                 });
-            })
-            .catch((e) => { console.error(e) });
+                return data;
+            });
     }
 
-    getData(): DataPacket {
-        return this.data.get_default();
+    getData(date: Date): DataPacket {
+        let timestamp = moment(date).valueOf();
+        if(this.latestTimestamp - timestamp < 1e8) {
+            let startDate = this.latestDate;
+            let endDate = new Date(startDate);
+            endDate.setFullYear(startDate.getFullYear() + 10);
+            this.setLatestDate(endDate);
+            this.loadData(startDate, endDate);
+        }
+        let index = this.data.findKeyIndex(timestamp);
+
+        if(index == 0) {
+            return undefined;
+        }
+
+        let beforeKey = this.data.getKey(index - 1);
+        let afterKey = this.data.getKey(index);
+
+        let beforeData = this.data.get(beforeKey);
+        let afterData = this.data.get(afterKey);
+
+        return beforeData.interpolate((timestamp - beforeKey) / (afterKey - beforeKey), afterData);
     }
 }
 
@@ -63,13 +97,7 @@ function parseToData(cells: string[]): DataPacket {
     let lt = parseFloat(ltString);
     // c * (60 seconds / 1 minutes) * lt minutes
     let distance = 3e8/100000000 * 60 * lt;
-    return new DataPacket(ra, distance);
-}
-
-class DataPacket {
-    constructor(public ra: number, public distance: number) {
-        this.ra = this.ra * Math.PI/180;
-    }
+    return new DataPacket(ra * Math.PI/180, distance);
 }
 
 export default Telemetry;

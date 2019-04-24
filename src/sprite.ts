@@ -29,8 +29,6 @@ export abstract class Sprite {
 
   }
 
-  abstract update(delta: number, controls: Controls): void;
-
   draw(camera: Camera): void {
     this.pixi_sprite.scale.set(this.scale * camera.scale, this.scale * camera.scale);
     this.pixi_sprite.position.set(camera.scale * (this.x - camera.x) + (this.app.renderer.width / 2), camera.scale * (this.y - camera.y) + (this.app.renderer.height / 2));
