@@ -35,7 +35,7 @@ export class Sun extends Planet {
   mass = 1.9891e30;
 
   setup() {
-    this.scale = 1;
+    this.scale = 2*695.51e6 / this.pixi_sprite.width;
     this.minScale = 0.025;
     this.x = 0;
     this.y = 0;
@@ -84,7 +84,7 @@ export class Earth extends Planet {
 
   setup() {
     this.telemetry = new Telemetry(399);
-    this.scale = 1;
+    this.scale = 2*6.371e6 / this.pixi_sprite.width;
     this.minScale = 0.05;
     this.x = 0;
     this.y = 300000000000;

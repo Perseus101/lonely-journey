@@ -7,7 +7,7 @@ import { Planet } from './planet';
 export class Spaceship extends Sprite {
   vx = 30000;
   vy = 0;
-  accel = 1e-2;
+  accel = 0.5e-1;
   planets: Planet[];
   G = 6.67408e-11;
   timeAccel: number;

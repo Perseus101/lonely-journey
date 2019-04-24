@@ -16,7 +16,7 @@ export class World {
   camera_scale_speed = 0.025;
   stars: Stars;
   follow_camera = true;
-  timeAccel = 365 * 24 * 60 / 20; // 1 year in 10 seconds
+  timeAccel = 365 * 24 * 60 / 10; // 1 year in 10 seconds
 
   constructor(app: PIXI.Application) {
     this.app = app;
