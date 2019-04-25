@@ -68,9 +68,10 @@ class TestRocket implements Body {
 export class Spaceship extends Sprite implements Body {
   vx = -30000;
   vy = 0;
-  accel1 = 2e-3 * 52560;
-  accel2 = 1e-2 * 52560;
-  accel3 = 5e-2 * 52560;
+  accel1 = 1e-3 * 52560;
+  accel2 = 2e-3 * 52560;
+  accel3 = 1e-2 * 52560;
+  accel4 = 5e-2 * 52560;
   planets: Planet[];
   planetsToConsider: Planet[];
   timeAccel: number;
@@ -113,8 +114,10 @@ export class Spaceship extends Sprite implements Body {
         accel = this.accel2;
       else if (thrusterPower == 3)
         accel = this.accel3;
+      else if (thrusterPower == 4)
+        accel = this.accel4;
       else
-        throw "Error, thrusterPower must be 1, 2, or 3. Was " + thrusterPower;
+        throw "Error, thrusterPower must be 1, 2, 3, or 4. Was " + thrusterPower;
       this.vy += Math.sin(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
       this.vx += Math.cos(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
     }

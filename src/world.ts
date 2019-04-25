@@ -24,7 +24,7 @@ export class World {
   timeAccel = 365 * 24 * 60 / 365; // 1 year in 10 seconds
   accScroll = 0;
   maxAccScroll = 50;
-  thrusterPower = 3;
+  thrusterPower = 4;
   dateElement: Element;
 
   constructor(app: PIXI.Application) {
@@ -54,6 +54,7 @@ export class World {
     let speed1El = document.getElementById("speed-1");
     let speed2El = document.getElementById("speed-2");
     let speed3El = document.getElementById("speed-3");
+    let speed4El = document.getElementById("speed-4");
     let active = "speed-activated";
     window.addEventListener("keydown", function (e) {
       if (e.code == "Digit1") {
@@ -61,18 +62,28 @@ export class World {
         speed1El.classList.add(active);
         speed2El.classList.remove(active);
         speed3El.classList.remove(active);
+        speed4El.classList.remove(active);
       }
       if (e.code == "Digit2") {
         self.thrusterPower = 2;
         speed1El.classList.remove(active);
         speed2El.classList.add(active);
         speed3El.classList.remove(active);
+        speed4El.classList.remove(active);
       }
       if (e.code == "Digit3") {
         self.thrusterPower = 3;
         speed1El.classList.remove(active);
         speed2El.classList.remove(active);
         speed3El.classList.add(active);
+        speed4El.classList.remove(active);
+      }
+      if (e.code == "Digit4") {
+        self.thrusterPower = 4;
+        speed1El.classList.remove(active);
+        speed2El.classList.remove(active);
+        speed3El.classList.remove(active);
+        speed4El.classList.add(active);
       }
     });
   }
