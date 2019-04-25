@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import * as PIXI from 'pixi.js';
 import Sprite from './sprite';
 import * as SpaceshipTexture from './images/spaceship.png';
@@ -71,6 +72,7 @@ export class Spaceship extends Sprite implements Body {
   accel2 = 1e-2 * 52560;
   accel3 = 5e-2 * 52560;
   planets: Planet[];
+  planetsToConsider: Planet[];
   timeAccel: number;
   testRocket = new TestRocket();
   futureLine: PIXI.Graphics;
@@ -79,6 +81,7 @@ export class Spaceship extends Sprite implements Body {
     super(app);
 
     this.planets = planets;
+    this.planetsToConsider = [planets[0], planets[1]];
     this.timeAccel = timeAccel;
     this.x = 0;
     this.y = 150000000000;
@@ -96,7 +99,7 @@ export class Spaceship extends Sprite implements Body {
     return new PIXI.Sprite(PIXI.loader.resources[SpaceshipTexture].texture);
   }
 
-  update(delta: number, controls: Controls, thrusterPower: number, camera: Camera): void {
+  update(delta: number, controls: Controls, thrusterPower: number, camera: Camera, date: Date): void {
     let xdiff = controls.mouse_x - this.x;
     let ydiff = controls.mouse_y - this.y;
     let angle = Math.atan2(ydiff, xdiff);
@@ -116,7 +119,12 @@ export class Spaceship extends Sprite implements Body {
       this.vx += Math.cos(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
     }
 
-    tick_physics(this, delta, this.planets, this.timeAccel);
+    let closestPlanet = this.planets[1];
+    for (let planet of this.planets.slice(2)) {
+      if (Math.pow(this.x - planet.x, 2) + Math.pow(this.y - planet.y, 2) < Math.pow(this.x - closestPlanet.x, 2) + Math.pow(this.y - closestPlanet.y, 2))
+        closestPlanet = planet;
+    }
+    this.planetsToConsider[1] = closestPlanet;
 
     this.futureLine.clear();
     this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
@@ -125,9 +133,13 @@ export class Spaceship extends Sprite implements Body {
       camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
       camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
     );
-    let num_steps = 60*30;
+    let num_steps = 60*20;
     for (let i = 0; i < num_steps; i++) {
-      tick_physics(this.testRocket, 1, this.planets, this.timeAccel);
+      let tickAmt = this.timeAccel * delta;
+      date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
+      closestPlanet.update(date, controls);
+
+      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
 
       this.futureLine.lineStyle(2, 0xffffff, 1 - i/num_steps, 0.5);
       this.futureLine.lineTo(
@@ -135,6 +147,8 @@ export class Spaceship extends Sprite implements Body {
         camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
       );
     }
+
+    tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
   }
 
   get_vx(): number { return this.vx; }
