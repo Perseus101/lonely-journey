@@ -60,6 +60,14 @@ export class StaticHorizonTelemetrySource extends TelemetrySource {
             this.info = require('./raw/pioneer11.info.horizon').toString();
             this.csv = require('./raw/pioneer11.horizon').toString();
         }
+        else if(id == -77) {
+            this.info = require('./raw/galileo.info.horizon').toString();
+            this.csv = require('./raw/galileo.horizon').toString();
+        }
+        else if(id == -82) {
+            this.info = require('./raw/cassini.info.horizon').toString();
+            this.csv = require('./raw/cassini.horizon').toString();
+        }
         else {
             throw new Error(`No static data for body: ${id}`);
         }
