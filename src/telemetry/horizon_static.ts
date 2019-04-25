@@ -4,6 +4,7 @@ import { TelemetrySource } from './source';
 
 export class StaticHorizonTelemetrySource extends TelemetrySource {
     private csv: string;
+    private loaded = false;
 
     constructor(id: number) {
         super(id);
@@ -47,6 +48,18 @@ export class StaticHorizonTelemetrySource extends TelemetrySource {
             this.info = require('./raw/voyager2.info.horizon').toString();
             this.csv = require('./raw/voyager2.horizon').toString();
         }
+        else if(id == -2) {
+            this.info = require('./raw/mariner2.info.horizon').toString();
+            this.csv = require('./raw/mariner2.horizon').toString();
+        }
+        else if(id == -23) {
+            this.info = require('./raw/pioneer10.info.horizon').toString();
+            this.csv = require('./raw/pioneer10.horizon').toString();
+        }
+        else if(id == -24) {
+            this.info = require('./raw/pioneer11.info.horizon').toString();
+            this.csv = require('./raw/pioneer11.horizon').toString();
+        }
         else {
             throw new Error(`No static data for body: ${id}`);
         }
@@ -54,7 +67,13 @@ export class StaticHorizonTelemetrySource extends TelemetrySource {
 
     fetchRawData(startDate: Date, endDate: Date): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            resolve(this.csv);
+            if(!this.loaded) {
+                resolve(this.csv);
+                this.loaded = true;
+            }
+            else {
+                reject("Already loaded static telemetry");
+            }
         });
     }
 }

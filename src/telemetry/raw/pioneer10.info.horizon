@@ -1,0 +1,43 @@
+ Revised: Jul 27, 2005   Pioneer 10 Spacecraft (interplanetary) / (Sun)     -23
+                       http://nssdc.gsfc.nasa.gov/nmc/tmp/1972-012A.html
+
+ BACKGROUND
+  This mission was the first to be sent to the outer solar system and the 
+  first to investigate the planet Jupiter. After the encounter, it followed 
+  an escape trajectory from the solar system. 
+
+  The spacecraft achieved its closest approach to Jupiter on December 4, 1973
+  (UTC), when it reached approximately 2.8 Jovian radii (about 200,000 km). 
+
+  The last fully successful acquisition of signal was March 3, 2002. Pioneer 10
+  signal at the Earth (<= 185 dBm) is now at DSN threshold limit of reception. 
+
+          Launched            : 1972-03-03 at 01:49:00 UTC
+          On-orbit dry mass   : 258 kg
+          Nominal Power Output: 165 W
+
+ SPACECRAFT TRAJECTORY: ("pfile10.nio")
+
+  Trajectory was provided by JPL Navigation Team. The JPL Multimission NAV and 
+  Solar System Dynamics Group source files merged consist of:
+ 
+     PN10A, PN10B, PN10C, PN10D, PN10E, PN10F, PN10G, DE118
+ 
+  The circumstances pertaining to the regeneration of the above spacecraft
+  trajectory source files PN10* are not well known.
+ 
+  DE118 was the standard JPL planet ephemeris for the P10 Jupiter flyby era.
+
+  NOTE: This trajectory is suitable for general historical purposes, but should
+  be used cautiously for high precision or tracking data applications. This is 
+  due to potential dynamical mismatches between the Pioneer-10 era models 
+  and the current modern solutions used by Horizons; for example, the old 
+  DE-118 planetary ephemeris solution and the Lieske E3 satellite theory of
+  JUP035 of that time, as compared to what is used now. 
+
+  For example, if the Pioneer-10 solutions used here incorporate planet or 
+  satellite ephemeris corrections estimated at the time, distance from the 
+  satellites returned by Horizons could be slightly different relative to 
+  the original solutions. However, the coordinate system transformation from 
+  the original DE-118 planetary ephemeris to the modern ICRF frame IS known 
+  and computed by Horizons.

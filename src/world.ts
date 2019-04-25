@@ -6,7 +6,7 @@ import { Controls } from "./controls";
 import Stars from "./stars";
 import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
 import TractorBeam from "./tractor_beam";
-import { Mission, VoyagerMission } from './mission';
+import { Mission, VoyagerMission, MarinerMission, PioneerMission } from './mission';
 
 export class World {
   app: PIXI.Application;
@@ -47,6 +47,9 @@ export class World {
     this.missions.push(
       new VoyagerMission(app, -31),
       new VoyagerMission(app, -32),
+      new MarinerMission(app, -2),
+      new PioneerMission(app, -23),
+      new PioneerMission(app, -24),
     );
 
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
