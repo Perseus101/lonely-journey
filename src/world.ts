@@ -21,7 +21,7 @@ export class World {
   camera_scroll_scale_speed = 0.001;
   stars: Stars;
   follow_camera = true;
-  timeAccel = 365 * 24 * 60 / 10; // 1 year in 10 seconds
+  timeAccel = 365 * 24 * 60 / 30; // 1 year in 10 seconds
   accScroll = 0;
   maxAccScroll = 50;
   thrusterPower = 3;
@@ -91,7 +91,8 @@ export class World {
 
   tick(delta: number, controls: Controls) {
     // Update date based on delta
-    this.date.setDate(this.date.getDate() + 1);
+    let tickAmt = this.timeAccel * delta;
+    this.date = moment(this.date).add(Math.round(tickAmt), 'seconds').toDate();
     this.updateDateText()
 
     this.remapped_controls.keys = controls.keys;
@@ -136,7 +137,7 @@ export class World {
       this.accScroll = 0;
     }
 
-    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower);
+    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.camera);
     for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
     }
