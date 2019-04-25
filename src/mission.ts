@@ -9,6 +9,10 @@ import { StaticHorizonTelemetrySource } from './telemetry/horizon_static';
 export abstract class Mission extends OrbitingBody {
     constructor(app: PIXI.Application, id: number) {
         super(app);
+        this.scale = 1e7 / this.pixi_sprite.width;
+        this.minScale = 0.05;
+        this.x = 1e35; // WAY off screen
+        this.y = 1e35; // WAY off screen
         this.telemetry = new Telemetry(id, new StaticHorizonTelemetrySource(id));
     }
 }

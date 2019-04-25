@@ -43,6 +43,7 @@ export class World {
     this.camera = new Camera();
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
+
     this.missions.push(
       new VoyagerMission(app, -31),
       new VoyagerMission(app, -32),
@@ -110,7 +111,7 @@ export class World {
         activateSpeed3();
       if (e.code == "Digit4")
         activateSpeed4();
-      if (e.code == "Period" && self.timeAccel < 10000) {
+      if (e.code == "Period" && self.timeAccel < 1000000) {
         self.timeAccel *= 10;
         timeAccelEl.innerHTML = "x" + self.timeAccel;
       }
