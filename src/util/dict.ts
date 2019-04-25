@@ -6,7 +6,7 @@ export class NearestKeyDict<T> {
 
     set(index: number, value: T) {
         this.keys.push(index);
-        this.keys.sort();
+        this.keys.sort((a, b) => a - b);
         this.data[index] = value;
     }
 
