@@ -141,11 +141,11 @@ export class Spaceship extends Sprite implements Body {
 
     let num_steps = 60*20;
     for (let i = 0; i < num_steps; i++) {
+      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
+
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
       closestPlanet.update(date, controls);
-
-      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
 
       this.futureLine.lineStyle(2, 0xffffff, 1 - i/num_steps, 0.5);
       this.futureLine.lineTo(
