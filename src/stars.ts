@@ -100,7 +100,7 @@ export class Stars {
         } else {
           let p = 1 - ratio*ratio;
           let n = this.starSettings.numParticles;
-          let numToRespawn = 1.2*Math.min(Math.max(Math.round(randomGauss() * Math.sqrt(n * p * (1 - p)) + p*n), 0), n);
+          let numToRespawn = 1.4*Math.min(Math.max(Math.round(randomGauss() * Math.sqrt(n * p * (1 - p)) + p*n), 0), n);
           let fun = makeRandomRange(this.stars.length);
           let misses = 0;
           for (let i = 0; i < numToRespawn; i++) {
