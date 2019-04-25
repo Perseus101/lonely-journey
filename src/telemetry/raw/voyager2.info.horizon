@@ -1,0 +1,16 @@
+ Revised: Jan 21, 2015   Voyager 2 Spacecraft (interplanetary) / (Sun)     -32
+                         http://www.jpl.nasa.gov/missions/voyager-2/
+
+ BACKGROUND
+   See the web-page above for extensive information on the Voyager Mission.
+
+ SPACECRAFT TRAJECTORY:
+   This trajectory is composed of two merged sections:
+
+     #1) 1977-Aug-20 to 1989-Oct-01:
+          A patched conic mission-design type trajectory in which the conics 
+          were constructed to approximately match specific events (such 
+          satellite encounters), providing a rough accuracy. 
+
+     #2) 1989-Oct-01 to 2031-Jan-01 (pfile_m05016u_V0.2):
+          Time extended trajectory from Voyager Navigation
