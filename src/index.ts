@@ -11,6 +11,8 @@ import * as SaturnTexture from './images/saturn.png';
 import * as UranusTexture from './images/uranus.png';
 import * as NeptuneTexture from './images/neptune.png';
 
+import * as VoyagerTexture from './images/voyager.png';
+
 import World from './world';
 import {Controls, KeyMap} from './controls';
 
@@ -78,9 +80,10 @@ PIXI.loader
   .add(SaturnTexture)
   .add(UranusTexture)
   .add(NeptuneTexture)
+  .add(VoyagerTexture)
   .load(setup);
 
-//This `setup` function will run when the image has loaded
+  //This `setup` function will run when the image has loaded
 function setup() {
   let world = new World(app);
   world.await_assets().then((val: any) => {

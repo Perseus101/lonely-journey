@@ -10,26 +10,12 @@ import * as JupiterTexture from './images/jupiter.png';
 import * as SaturnTexture from './images/saturn.png';
 import * as UranusTexture from './images/uranus.png';
 import * as NeptuneTexture from './images/neptune.png';
-import Controls from './controls';
 import Telemetry from './telemetry/telemetry';
+import { OrbitingBody } from './orbit';
 
 
-export abstract class Planet extends Sprite {
-  telemetry: Telemetry;
+export abstract class Planet extends OrbitingBody {
   mass: number; //in kg
-
-  update(date: Date, controls: Controls) {
-    let data = this.telemetry.getData(date);
-    if (data === undefined) {
-      return;
-    }
-    this.x = data.distance * Math.cos(data.ra);
-    this.y = data.distance * Math.sin(data.ra);
-  }
-
-  await_assets(): Promise<any> {
-    return this.telemetry.await_load();
-  }
 }
 
 export class Sun extends Planet {
@@ -47,7 +33,7 @@ export class Sun extends Planet {
     return sprite;
   }
 
-  update(date: Date, controls: Controls) {}
+  update(date: Date) {}
 
   await_assets(): Promise<any> {
     return Promise.resolve();

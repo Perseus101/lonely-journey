@@ -6,6 +6,7 @@ import { Controls } from "./controls";
 import Stars from "./stars";
 import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
 import TractorBeam from "./tractor_beam";
+import { Mission, VoyagerMission } from './mission';
 
 export class World {
   app: PIXI.Application;
@@ -15,6 +16,7 @@ export class World {
   spaceship: Spaceship;
   // tractor_beam: TractorBeam;
   planets: Planet[] = [];
+  missions: Mission[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
   camera_scale_speed = 0.025;
@@ -41,6 +43,11 @@ export class World {
     this.camera = new Camera();
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
+    this.missions.push(
+      new VoyagerMission(app, -31),
+      new VoyagerMission(app, -32),
+    );
+
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
     // this.tractor_beam = new TractorBeam(app);
 
@@ -160,7 +167,7 @@ export class World {
 
 
     for (let c of this.planets) {
-      c.update(this.date, this.remapped_controls);
+      c.update(this.date);
     }
 
     // this.tractor_beam.update(this.spaceship);
@@ -169,8 +176,13 @@ export class World {
     this.spaceship.draw(this.camera);
 
     for (let c of this.planets) {
-      c.update(this.date, this.remapped_controls);
+      c.update(this.date);
       c.draw(this.camera);
+    }
+
+    for (let m of this.missions) {
+      m.update(this.date);
+      m.draw(this.camera);
     }
     // this.tractor_beam.draw(this.camera);
   }
