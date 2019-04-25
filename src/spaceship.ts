@@ -136,6 +136,9 @@ export class Spaceship extends Sprite implements Body {
       camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
       camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
     );
+
+    tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
+
     let num_steps = 60*20;
     for (let i = 0; i < num_steps; i++) {
       let tickAmt = this.timeAccel * delta;
@@ -150,8 +153,6 @@ export class Spaceship extends Sprite implements Body {
         camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
       );
     }
-
-    tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
   }
 
   get_vx(): number { return this.vx; }
