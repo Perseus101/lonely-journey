@@ -85,6 +85,7 @@ export class Spaceship extends Sprite implements Body {
   timeAccel: number;
   testRocket = new TestRocket();
   futureLine: PIXI.Graphics;
+  futureLinePoints: number[] = [];
 
   constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
     super(app);
@@ -145,38 +146,48 @@ export class Spaceship extends Sprite implements Body {
    * Returns true if acceleration warning limit is going to be within the next second
    */
   updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): boolean {
+    let warningTimeWindow = 60; // 1 second
+
+    this.futureLinePoints.length = 0; //clear the points
     this.futureLine.clear();
-    this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
-    this.futureLine.moveTo(
-      camera.scale * (this.x - camera.x) + (this.app.renderer.width / 2),
-      camera.scale * (this.y - camera.y) + (this.app.renderer.height / 2)
-    );
+
+    this.futureLinePoints.push(this.x, this.y);
 
     cloneIntoBody(this.testRocket, this);
 
-    let accelWarningHitSoon = false;
-    let accelWarningHit = false;
-
     let num_steps = 60 * 20;
+    let accelWarningHitIndex = Number.MAX_SAFE_INTEGER;
     for (let i = 0; i < num_steps; i++) {
-      let color = 0xffffff;
-      if (accelWarningHit)
-        color = 0xff9999;
-      this.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
-      this.futureLine.lineTo(
-        camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
-        camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
-      );
+      this.futureLinePoints.push(this.testRocket.get_x(), this.testRocket.get_y());
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
       this.planetsToConsider[1].update(date);
 
-      accelWarningHit = tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
-      if (accelWarningHit && i < 60)
-        accelWarningHitSoon = true;
+      let accelWarningHit = tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
+      if (accelWarningHit && i < accelWarningHitIndex)
+        accelWarningHitIndex = i;
     }
 
-    return accelWarningHitSoon;
+    this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
+    this.futureLine.moveTo(
+      camera.scale * (this.futureLinePoints[0] - camera.x) + (this.app.renderer.width / 2),
+      camera.scale * (this.futureLinePoints[1] - camera.y) + (this.app.renderer.height / 2)
+    );
+
+    for (let i = 1; i < this.futureLinePoints.length/2; i+= 1) {
+      let x = this.futureLinePoints[2*i];
+      let y = this.futureLinePoints[2*i + 1];
+      let color = 0xffffff;
+      if (i >= accelWarningHitIndex - warningTimeWindow)
+        color = 0xff9999;
+      this.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
+      this.futureLine.lineTo(
+        camera.scale * (x - camera.x) + (this.app.renderer.width / 2),
+        camera.scale * (y - camera.y) + (this.app.renderer.height / 2)
+      );
+    }
+
+    return accelWarningHitIndex < warningTimeWindow;
   }
 
   get_vx(): number { return this.vx; }
