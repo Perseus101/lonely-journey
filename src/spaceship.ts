@@ -142,7 +142,7 @@ export class Spaceship extends Sprite implements Body {
   }
 
   /**
-   * Returns true if acceleration warning limit is going to be within the next half second
+   * Returns true if acceleration warning limit is going to be within the next second
    */
   updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): boolean {
     this.futureLine.clear();
@@ -172,7 +172,7 @@ export class Spaceship extends Sprite implements Body {
       this.planetsToConsider[1].update(date);
 
       accelWarningHit = tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
-      if (accelWarningHit && i < 60*0.5)
+      if (accelWarningHit && i < 60)
         accelWarningHitSoon = true;
     }
 

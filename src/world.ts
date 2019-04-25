@@ -29,6 +29,9 @@ export class World {
   thrusterPower = 4;
   dateElement: Element;
   previousRocket: TestRocket;
+  timeAccelEl = document.getElementById("time-accel");
+  timeSpedUp = false;
+  timeSlowedDown = false;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -61,8 +64,7 @@ export class World {
 
     this.dateElement = document.getElementById("date");
 
-    let timeAccelEl = document.getElementById("time-accel");
-    timeAccelEl.innerHTML = "x" + self.timeAccel;
+    this.timeAccelEl.innerHTML = "x" + self.timeAccel;
 
     let speed1El = document.getElementById("speed-1");
     let speed2El = document.getElementById("speed-2");
@@ -113,14 +115,6 @@ export class World {
         activateSpeed3();
       if (e.code == "Digit4")
         activateSpeed4();
-      if (e.code == "Period" && self.timeAccel < 1000000) {
-        self.timeAccel *= 10;
-        timeAccelEl.innerHTML = "x" + self.timeAccel;
-      }
-      if (e.code == "Comma" && self.timeAccel > 1) {
-        self.timeAccel /= 10;
-        timeAccelEl.innerHTML = "x" + self.timeAccel;
-      }
     });
   }
 
@@ -181,6 +175,22 @@ export class World {
       this.accScroll = 0;
     }
 
+    //Attempt to honor controls for slowing down or speeding up time
+    if (controls.keys["Period"] && this.timeAccel < 1000000 && !this.timeSpedUp) {
+      this.timeAccel *= 10;
+      this.timeAccelEl.innerHTML = "x" + this.timeAccel;
+      this.timeSpedUp = true;
+    }
+    if (controls.keys["Comma"] && this.timeAccel > 1 && !this.timeSlowedDown) {
+      this.timeAccel /= 10;
+      this.timeAccelEl.innerHTML = "x" + this.timeAccel;
+      this.timeSlowedDown = true;
+    }
+    if (!controls.keys["Period"])
+      this.timeSpedUp = false;
+    if (!controls.keys["Comma"])
+      this.timeSlowedDown = false;
+
     cloneIntoBody(this.previousRocket, this.spaceship);
     while (true) {
       this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
@@ -194,8 +204,9 @@ export class World {
 
       if (shouldSlowDown && this.timeAccel > 1) {
         this.timeAccel /= 10;
-        document.getElementById("time-accel").innerHTML = "x" + this.timeAccel;
+        this.timeAccelEl.innerHTML = "x" + this.timeAccel;
         cloneIntoBody(this.spaceship, this.previousRocket);
+        this.timeSpedUp = false;
       } else {
         break;
       }
