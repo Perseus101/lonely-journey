@@ -100,7 +100,7 @@ export class Spaceship extends Sprite implements Body {
     return new PIXI.Sprite(PIXI.loader.resources[SpaceshipTexture].texture);
   }
 
-  update(delta: number, controls: Controls, thrusterPower: number, camera: Camera, date: Date): void {
+  update(delta: number, controls: Controls, thrusterPower: number): void {
     let xdiff = controls.mouse_x - this.x;
     let ydiff = controls.mouse_y - this.y;
     let angle = Math.atan2(ydiff, xdiff);
@@ -129,6 +129,10 @@ export class Spaceship extends Sprite implements Body {
     }
     this.planetsToConsider[1] = closestPlanet;
 
+    tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
+  }
+
+  updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): void {
     this.futureLine.clear();
     this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
     this.futureLine.moveTo(
@@ -136,18 +140,16 @@ export class Spaceship extends Sprite implements Body {
       camera.scale * (this.y - camera.y) + (this.app.renderer.height / 2)
     );
 
-    tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
-
     this.testRocket.clone_into(this);
 
-    let num_steps = 60*20;
+    let num_steps = 60 * 20;
     for (let i = 0; i < num_steps; i++) {
       this.futureLine.lineStyle(2, 0xffffff, 1 - i / num_steps, 0.5);
       this.futureLine.lineTo(
         camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
         camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
       );
-      closestPlanet.update(date, controls);
+      this.planetsToConsider[1].update(date, controls);
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
 

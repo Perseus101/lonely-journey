@@ -13,7 +13,7 @@ export class World {
   date: Date;
   camera: Camera;
   spaceship: Spaceship;
-  tractor_beam: TractorBeam;
+  // tractor_beam: TractorBeam;
   planets: Planet[] = [];
   remapped_controls = new Controls();
   camera_speed = 10;
@@ -42,7 +42,7 @@ export class World {
     this.stars = new Stars(app);
     this.planets.push(new Sun(app), new Mercury(app), new Venus(app), new Earth(app), new Mars(app), new Jupiter(app), new Saturn(app), new Uranus(app), new Neptune(app));
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
-    this.tractor_beam = new TractorBeam(app);
+    // this.tractor_beam = new TractorBeam(app);
 
     var self = this;
     window.addEventListener("wheel", function(e: any) {
@@ -149,17 +149,21 @@ export class World {
       this.accScroll = 0;
     }
 
+    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower);
+
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;
       this.camera.y = this.spaceship.y;
     }
 
-    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.camera, this.date);
+    this.spaceship.updateFutureLine(delta, this.remapped_controls, this.camera, this.date);
+
+
     for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
     }
 
-    this.tractor_beam.update(this.spaceship);
+    // this.tractor_beam.update(this.spaceship);
 
     this.stars.tick(delta, this.camera);
     this.spaceship.draw(this.camera);
@@ -168,7 +172,7 @@ export class World {
       c.update(this.date, this.remapped_controls);
       c.draw(this.camera);
     }
-    this.tractor_beam.draw(this.camera);
+    // this.tractor_beam.draw(this.camera);
   }
 }
 
