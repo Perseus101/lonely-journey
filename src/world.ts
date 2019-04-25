@@ -149,17 +149,17 @@ export class World {
       this.accScroll = 0;
     }
 
+    if (this.follow_camera) {
+      this.camera.x = this.spaceship.x;
+      this.camera.y = this.spaceship.y;
+    }
+
     this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.camera, this.date);
     for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
     }
 
     this.tractor_beam.update(this.spaceship);
-
-    if (this.follow_camera) {
-      this.camera.x = this.spaceship.x;
-      this.camera.y = this.spaceship.y;
-    }
 
     this.stars.tick(delta, this.camera);
     this.spaceship.draw(this.camera);
