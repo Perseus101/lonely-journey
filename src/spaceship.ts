@@ -190,37 +190,39 @@ export class Spaceship extends Sprite implements Body {
       inOrbit = true;
     }
 
-    let initialColor = 0xffffff;
-    if (inOrbit)
-      initialColor = 0x99ff99;
-
-    this.futureLine.lineStyle(2, initialColor, 1, 0.5);
-    this.futureLine.moveTo(
-      camera.scale * (this.futureLinePoints[0] - camera.x) + (this.app.renderer.width / 2),
-      camera.scale * (this.futureLinePoints[1] - camera.y) + (this.app.renderer.height / 2)
-    );
-
-    for (let i = 1; i < this.futureLinePoints.length/2; i+= 1) {
-      let x = this.futureLinePoints[2*i];
-      let y = this.futureLinePoints[2*i + 1];
-      let color = initialColor;
-      if (i >= accelWarningHitIndex - warningTimeWindow)
-        color = 0xff9999;
-      this.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
-
-      let planetaryCorrectionX = 0;
-      let planetaryCorrectionY = 0;
-
-      if (inOrbit) {
-        planetaryCorrectionX = this.futurePlanetPoints[2 * i] - this.futurePlanetPoints[0];
-        planetaryCorrectionY = this.futurePlanetPoints[2 * i + 1] - this.futurePlanetPoints[1];
-      }
-
-      this.futureLine.lineTo(
-        camera.scale * (x - camera.x - planetaryCorrectionX) + (this.app.renderer.width / 2),
-        camera.scale * (y - camera.y - planetaryCorrectionY) + (this.app.renderer.height / 2)
+    let self = this;
+    function drawLine(initialColor: number, usePlanetaryCorrection: boolean) {
+      self.futureLine.lineStyle(2, initialColor, 1, 0.5);
+      self.futureLine.moveTo(
+        camera.scale * (self.futureLinePoints[0] - camera.x) + (self.app.renderer.width / 2),
+        camera.scale * (self.futureLinePoints[1] - camera.y) + (self.app.renderer.height / 2)
       );
+
+      for (let i = 1; i < self.futureLinePoints.length / 2; i += 1) {
+        let x = self.futureLinePoints[2 * i];
+        let y = self.futureLinePoints[2 * i + 1];
+        let color = initialColor;
+        if (i >= accelWarningHitIndex - warningTimeWindow)
+          color = 0xffff99;
+        self.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
+
+        let planetaryCorrectionX = 0;
+        let planetaryCorrectionY = 0;
+
+        if (usePlanetaryCorrection) {
+          planetaryCorrectionX = self.futurePlanetPoints[2 * i] - self.futurePlanetPoints[0];
+          planetaryCorrectionY = self.futurePlanetPoints[2 * i + 1] - self.futurePlanetPoints[1];
+        }
+
+        self.futureLine.lineTo(
+          camera.scale * (x - camera.x - planetaryCorrectionX) + (self.app.renderer.width / 2),
+          camera.scale * (y - camera.y - planetaryCorrectionY) + (self.app.renderer.height / 2)
+        );
+      }
     }
+    drawLine(0xffffff, false);
+    if (inOrbit)
+      drawLine(0x99ff99, true);
 
     return accelWarningHitIndex < warningTimeWindow;
   }
