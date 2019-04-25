@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 
 import Camera from "./camera";
-import Spaceship from "./spaceship";
+import Spaceship, { TestRocket, cloneIntoBody } from "./spaceship";
 import { Controls } from "./controls";
 import Stars from "./stars";
 import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
@@ -28,6 +28,7 @@ export class World {
   maxAccScroll = 50;
   thrusterPower = 4;
   dateElement: Element;
+  previousRocket: TestRocket;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -50,6 +51,7 @@ export class World {
     );
 
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
+    this.previousRocket = new TestRocket();
     // this.tractor_beam = new TractorBeam(app);
 
     var self = this;
@@ -136,10 +138,6 @@ export class World {
 
   tick(delta: number, controls: Controls) {
     delta = 1;
-    // Update date based on delta
-    let tickAmt = this.timeAccel * delta;
-    this.date = moment(this.date).add(Math.round(tickAmt), 'seconds').toDate();
-    this.updateDateText()
 
     this.remapped_controls.keys = controls.keys;
     this.remapped_controls.mouse_down = controls.mouse_down;
@@ -183,14 +181,30 @@ export class World {
       this.accScroll = 0;
     }
 
-    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
+    cloneIntoBody(this.previousRocket, this.spaceship);
+    while (true) {
+      this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
 
-    if (this.follow_camera) {
-      this.camera.x = this.spaceship.x;
-      this.camera.y = this.spaceship.y;
+      if (this.follow_camera) {
+        this.camera.x = this.spaceship.x;
+        this.camera.y = this.spaceship.y;
+      }
+
+      let shouldSlowDown = this.spaceship.updateFutureLine(delta, this.remapped_controls, this.camera, this.date);
+
+      if (shouldSlowDown && this.timeAccel > 1) {
+        this.timeAccel /= 10;
+        document.getElementById("time-accel").innerHTML = "x" + this.timeAccel;
+        cloneIntoBody(this.spaceship, this.previousRocket);
+      } else {
+        break;
+      }
     }
 
-    this.spaceship.updateFutureLine(delta, this.remapped_controls, this.camera, this.date);
+    // Update date based on delta
+    let tickAmt = this.timeAccel * delta;
+    this.date = moment(this.date).add(Math.round(tickAmt), 'seconds').toDate();
+    this.updateDateText()
 
 
     for (let c of this.planets) {

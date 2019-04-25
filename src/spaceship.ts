@@ -19,17 +19,30 @@ interface Body {
   set_y(y: number): void;
 }
 
-const physicsConstants = {
-  G: 6.67408e-11,
-  maxAccel: 3
+export function cloneIntoBody(into: Body, from: Body) {
+  into.set_vx(from.get_vx());
+  into.set_vy(from.get_vy());
+  into.set_x(from.get_x());
+  into.set_y(from.get_y());
 }
 
-function tick_physics(body: Body, delta: number, planets: Planet[], timeAccel: number): void {
+const physicsConstants = {
+  G: 6.67408e-11,
+  maxAccel: 3*1000,
+  accelWarning: 3*1000
+}
+
+/**
+ * @returns Whether or not the acceleration warning limit was hit
+ */
+function tick_physics(body: Body, delta: number, planets: Planet[], timeAccel: number): boolean {
+  let accelWarningHit = false;
   for(let planet of planets) {
     let accel = physicsConstants.G * planet.mass / (Math.pow(planet.x - body.get_x(), 2) + Math.pow(planet.y - body.get_y(), 2));
-    if (accel > physicsConstants.maxAccel) {
-      accel = physicsConstants.maxAccel;
-    }
+    if (accel > physicsConstants.accelWarning / timeAccel)
+      accelWarningHit = true;
+    if (accel > physicsConstants.maxAccel / timeAccel)
+      accel = physicsConstants.maxAccel / timeAccel;
     if (planet.y - body.get_y() != 0 && planet.x - body.get_x() != 0) {
       let angle = Math.atan2(planet.y - body.get_y(), planet.x - body.get_x());
       body.set_vy(body.get_vy() + Math.sin(angle) * delta * accel * timeAccel);
@@ -39,20 +52,15 @@ function tick_physics(body: Body, delta: number, planets: Planet[], timeAccel: n
 
   body.set_y(body.get_y() + body.get_vy() * delta * timeAccel);
   body.set_x(body.get_x() + body.get_vx() * delta * timeAccel);
+
+  return accelWarningHit;
 }
 
-class TestRocket implements Body {
+export class TestRocket implements Body {
   vx: number = 0;
   vy: number = 0;
   x: number = 0;
   y: number = 0;
-
-  clone_into(from: Body) {
-    this.vx = from.get_vx();
-    this.vy = from.get_vy();
-    this.x = from.get_x();
-    this.y = from.get_y();
-  }
 
   get_vx(): number { return this.vx; }
   get_vy(): number { return this.vy; }
@@ -133,7 +141,10 @@ export class Spaceship extends Sprite implements Body {
     tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
   }
 
-  updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): void {
+  /**
+   * Returns true if acceleration warning limit is going to be within the next half second
+   */
+  updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): boolean {
     this.futureLine.clear();
     this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
     this.futureLine.moveTo(
@@ -141,21 +152,31 @@ export class Spaceship extends Sprite implements Body {
       camera.scale * (this.y - camera.y) + (this.app.renderer.height / 2)
     );
 
-    this.testRocket.clone_into(this);
+    cloneIntoBody(this.testRocket, this);
+
+    let accelWarningHitSoon = false;
+    let accelWarningHit = false;
 
     let num_steps = 60 * 20;
     for (let i = 0; i < num_steps; i++) {
-      this.futureLine.lineStyle(2, 0xffffff, 1 - i / num_steps, 0.5);
+      let color = 0xffffff;
+      if (accelWarningHit)
+        color = 0xff9999;
+      this.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
       this.futureLine.lineTo(
         camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
         camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
       );
-      this.planetsToConsider[1].update(date);
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
+      this.planetsToConsider[1].update(date);
 
-      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
+      accelWarningHit = tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
+      if (accelWarningHit && i < 60*0.5)
+        accelWarningHitSoon = true;
     }
+
+    return accelWarningHitSoon;
   }
 
   get_vx(): number { return this.vx; }
