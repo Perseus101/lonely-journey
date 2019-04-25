@@ -1,0 +1,45 @@
+ Revised: Jun 15, 2007             Pioneer 11 Spacecraft / (Sun)            -24
+                       http://nssdc.gsfc.nasa.gov/nmc/tmp/1973-019A.html
+
+ BACKGROUND:
+
+  This mission was the 2nd sent to the Jupiter system and the first to 
+  investigate the planet Saturn and its ring system. 
+
+  Closest approach to Jupiter cloud-tops was 42,000 km on Dec 3, 1974. It came 
+  within 21,000 km of Saturn's cloud-tops on Sep 1, 1979. Pioneer 11, like 
+  Pioneer 10, used Jupiter's gravitational field to alter its trajectory.
+
+  Science operations and daily telemetry ceased on September 30, 1995 when the 
+  RTG power level was insufficient to operate any experiments.
+
+          Launched            : 1973-04-06 at 02:11:00 UTC
+          On-orbit dry mass   : 259 kg
+          Nominal Power Output: 165 W
+
+ SPACECRAFT TRAJECTORY:
+
+  Trajectory provided by JPL Navigation Team.  JPL Multimission NAV and Solar 
+  System Dynamics Group source files:
+ 
+       PN11A, PN11AB ("AB" is not a typo), PN11C, PN11D, PN11E, 
+       PN11FE ("FE" is not a typo), PN11G, DE118
+ 
+  The circumstances pertaining to the regeneration of the spacecraft
+  trajectory source files, PN11*, are not well known.
+ 
+  DE118 is a standard JPL planet ephemeris for the P11 Jupiter encounter.
+
+  NOTE: This trajectory is suitable for general historical purposes, but should
+  be used cautiously for high precision or tracking data applications. This is 
+  due to potential dynamical mismatches between the Pioneer-11 era models 
+  and the current modern solutions used by Horizons; for example, the old 
+  DE-118 planetary ephemeris solution and the Lieske E3 satellite theory of     
+  JUP035, SAT050, etc., as compared to what is used now. 
+
+  For example, if the Pioneer-11 solutions used here incorporate planet or 
+  satellite ephemeris corrections estimated at the time, distance from the 
+  satellites returned by Horizons could be slightly different relative to 
+  the original solutions. However, the coordinate system transformation from 
+  the original DE-118 planetary ephemeris to the modern ICRF frame IS known 
+  and computed by Horizons.

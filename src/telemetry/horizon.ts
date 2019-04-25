@@ -15,7 +15,11 @@ export class HorizonTelemetrySource extends TelemetrySource {
             .then(response => { return response.text() })
             .then(text => {
                 let regex = /\$\$SOE[\s\S]*\$\$EOE/;
-                let match = text.match(regex)[0];
+                let all_matches = text.match(regex);
+                if (all_matches == null) {
+                    throw new Error("No telemetry for date range");
+                }
+                let match = all_matches[0];
                 let csv = match.substring(6, match.length-6);
                 return csv;
             });

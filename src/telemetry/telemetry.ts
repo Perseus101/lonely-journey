@@ -28,11 +28,8 @@ export class Telemetry {
         private id: number,
         private source: TelemetrySource = new StaticHorizonTelemetrySource(id)
     ) {
-        let startDate = this.INITIAL_DATE;
-        let endDate = new Date(startDate);
-        endDate.setFullYear(startDate.getFullYear() + 50);
-        this.setLatestDate(endDate);
-        this.unresolved.push(this.loadData(startDate, endDate));
+        this.setLatestDate(this.INITIAL_DATE);
+        this.loadData();
     }
 
     await_load(): Promise<any> {
@@ -46,21 +43,25 @@ export class Telemetry {
         this.latestDate = date;
     }
 
-    loadData(startDate: Date, endDate: Date): Promise<void> {
-        return this.source.loadData(startDate, endDate,
+    private loadData(step = 10) {
+        let startDate = this.latestDate;
+        let endDate = new Date(startDate);
+        endDate.setFullYear(startDate.getFullYear() + step);
+        this.setLatestDate(endDate);
+
+        // Catch and ignore errors loading telemetry
+        this.unresolved.push(this.source.loadData(startDate, endDate,
             (timestamp: number, packet: DataPacket) => {
                 this.data.set(timestamp, packet);
-            });
+            })
+            .catch((e) => {})
+        );
     }
 
     getData(date: Date): DataPacket {
         let timestamp = moment(date).valueOf();
         if(this.latestTimestamp - timestamp < 1e8) {
-            let startDate = this.latestDate;
-            let endDate = new Date(startDate);
-            endDate.setFullYear(startDate.getFullYear() + 10);
-            this.setLatestDate(endDate);
-            this.loadData(startDate, endDate);
+            this.loadData();
         }
         let index = this.data.findKeyIndex(timestamp);
 

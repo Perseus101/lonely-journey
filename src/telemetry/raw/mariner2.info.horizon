@@ -1,0 +1,90 @@
+Oct 18, 2012         Mariner 2 Spacecraft (interplanetary) / (Sun)           -2
+                                     1962-041A
+          http://nssdc.gsfc.nasa.gov/nmc/spacecraftDisplay.do?id=1962-041A
+
+BACKGROUND:
+ Mariner 2 was the first spacecraft to successfully encounter another planet.
+ It returned information which confirmed that Venus is very hot (800 degrees
+ Fahrenheit, now revised to 900 degrees F.) and has a cloud-covered atmosphere
+ composed primarily of carbon dioxide.
+
+ It was launched from Cape Canaveral on August 27, 1962 by a two-stage
+ Atlas-Agena B rocket. 
+
+ Launched         : 1962-Aug-27 at 06:53:14 UTC
+ On-orbit dry mass: 202.8 kg
+ Nominal Power    : 220.0 W
+
+ A trajectory correction maneuver (TCM) was performed on September 4, 1962.
+ Encounter with Venus occurred on December 14, 1962. 
+
+SPACECRAFT:
+ Hexagonal base     : 1.04 meters across, 0.36 meters thick
+ Total height of s/c: 3.66 m
+ Solar panels (2)   : 5.05 m (total) x 0.76m (attached to base)
+
+ On top of base was a pyramidal mast holding science experiments.
+ An arm holding a directional dish antenna extended from the base, 
+  below the spacecraft.
+ A 31 cm Dacron extension to the solar panels was used as a solar 
+  sail to balance solar pressure on the panels.
+
+TRACKING DATA:
+ The spacecraft was tracked at L-Band (960 MHz) from the DSN Goldstone complex 
+ in three-way Doppler mode, with DSS 12 transmitting and DSS 11 receiving,  
+ except for two data acquisitions in October with DSS 12 transmitting and 
+ receiving. 
+
+ The only archive for the Doppler data exists in printed form in JPL Technical 
+ Report 32-816, July 1, 1967, by John D. Anderson. Data between orbital 
+ injection at Earth and the TCM are not included and are presumably lost. 
+ Original data time-tags were UTC2, converted for this reconstructed trajectory
+ to coordinate time (CT).
+
+ A summary of scientific results from the mission, both in cruise phase and 
+ encounter phase, can be found in "A Summary Review of the Scientific Findings 
+ of the Mariner Venus Mission," C. P. Sonett, Space Science Reviews, Volume 2, 
+ Issue 6, pp.751-777, 1963.  Results from the Doppler tracking can be found 
+ in "The Evaluation of Certain Astronomical Constants from the Radio Tracking 
+ of Mariner II," John D.  Anderson, George W. Null, and Catherine T. Thornton, 
+ Progress in Astronautics and Aeronautics, Vol. 14, Academic Press, 1964.
+
+SPACECRAFT TRAJECTORY:
+  Trajectory name                     Start              Stop
+  ----------------------------  -----------------  -----------------
+  m2_620827_621231_ja_v1        1962-Aug-27 07:20  1963-Jan-01 00:00 (CT)
+
+ Trajectory was provided by John D. Anderson (JPL, Retired), based on a 
+ fit to the encounter data with planetary positions and masses from JPL DE405. 
+
+ Perturbation from solar-radiation pressure was modeled in the trajectory 
+ integration. No translational forces from outgassing of the attitude control 
+ subsystem were modeled, though they may have been significant. 
+ 
+ The trajectory is intended for general historical purposes, but should be 
+ used cautiously for high-precision applications.  
+
+ TCM (constrained reconstruction):
+   delta-V       : 467.5 m/s
+   time (adopted): 1962-Sep-05 00:00:00 CT
+   length of burn: instantaneous (actual was ~34 minutes & ended a few
+                    minutes earlier)
+   direction     : RA=154.63 deg., DEC= 14.97 deg. (DE405)
+
+ Venus encounter (data-fit):
+   Doppler residuals: 34 mm/s 1-sigma (typical for L-Band data of the Mariner 2
+                       era, before implementation of atomic frequency and 
+                       timing systems by the DSN). 
+   Distance         : 40948 km (in good agreement with distance estimates by 
+                       JPL Navigation at the time of the flyby.
+   Time             : 1962-Dec-14 19:55:19 CT at Venus, 19:57:57 UTC at Earth.
+
+ The fit-to-data Venus encounter trajectory was integrated backwards to the 
+ TCM, an instantaneous velocity maneuver was calculated, and the trajectory 
+ was integrated backwards from the time of the TCM to Earth encounter at a 
+ constrained perigee altitude of 118 km, the altitude of the parking orbit 
+ at injection into Earth Venus transfer. 
+
+ No other constraints were imposed on the parking orbit, and the change of 
+ instantaneous velocity at the TCM was optimized to fit this one altitude 
+ constraint at Earth. 
