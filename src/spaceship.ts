@@ -86,6 +86,7 @@ export class Spaceship extends Sprite implements Body {
   testRocket = new TestRocket();
   futureLine: PIXI.Graphics;
   futureLinePoints: number[] = [];
+  futurePlanetPoints: number[] = [];
 
   constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
     super(app);
@@ -148,17 +149,29 @@ export class Spaceship extends Sprite implements Body {
   updateFutureLine(delta: number, controls: Controls, camera: Camera, date: Date): boolean {
     let warningTimeWindow = 60; // 1 second
 
-    this.futureLinePoints.length = 0; //clear the points
+    this.futureLinePoints.length = 0; //clear the line points
+    this.futurePlanetPoints.length = 0; //clear the planet points
     this.futureLine.clear();
 
     this.futureLinePoints.push(this.x, this.y);
+    this.futurePlanetPoints.push(this.planetsToConsider[1].x, this.planetsToConsider[1].y);
 
     cloneIntoBody(this.testRocket, this);
 
     let num_steps = 60 * 20;
     let accelWarningHitIndex = Number.MAX_SAFE_INTEGER;
+    let closestDistToPlanet = Number.MAX_SAFE_INTEGER;
+    let furthestDistToPlanet = 0;
     for (let i = 0; i < num_steps; i++) {
       this.futureLinePoints.push(this.testRocket.get_x(), this.testRocket.get_y());
+      this.futurePlanetPoints.push(this.planetsToConsider[1].x, this.planetsToConsider[1].y);
+
+      let dist = Math.pow(this.planetsToConsider[1].x - this.testRocket.get_x(), 2) + Math.pow(this.planetsToConsider[1].y - this.testRocket.get_y(), 2);
+      if (dist < closestDistToPlanet)
+        closestDistToPlanet = dist;
+      if (dist > furthestDistToPlanet)
+        furthestDistToPlanet = dist;
+
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
       this.planetsToConsider[1].update(date);
@@ -168,7 +181,20 @@ export class Spaceship extends Sprite implements Body {
         accelWarningHitIndex = i;
     }
 
-    this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
+    //convert from squared distance
+    closestDistToPlanet = Math.sqrt(closestDistToPlanet);
+    furthestDistToPlanet = Math.sqrt(furthestDistToPlanet);
+
+    let inOrbit = false;
+    if (furthestDistToPlanet / closestDistToPlanet < 100 && furthestDistToPlanet < 5e9) { //roughly within ellipse ratios, and close enough
+      inOrbit = true;
+    }
+
+    let initialColor = 0xffffff;
+    if (inOrbit)
+      initialColor = 0x99ff99;
+
+    this.futureLine.lineStyle(2, initialColor, 1, 0.5);
     this.futureLine.moveTo(
       camera.scale * (this.futureLinePoints[0] - camera.x) + (this.app.renderer.width / 2),
       camera.scale * (this.futureLinePoints[1] - camera.y) + (this.app.renderer.height / 2)
@@ -177,13 +203,22 @@ export class Spaceship extends Sprite implements Body {
     for (let i = 1; i < this.futureLinePoints.length/2; i+= 1) {
       let x = this.futureLinePoints[2*i];
       let y = this.futureLinePoints[2*i + 1];
-      let color = 0xffffff;
+      let color = initialColor;
       if (i >= accelWarningHitIndex - warningTimeWindow)
         color = 0xff9999;
       this.futureLine.lineStyle(2, color, 1 - i / num_steps, 0.5);
+
+      let planetaryCorrectionX = 0;
+      let planetaryCorrectionY = 0;
+
+      if (inOrbit) {
+        planetaryCorrectionX = this.futurePlanetPoints[2 * i] - this.futurePlanetPoints[0];
+        planetaryCorrectionY = this.futurePlanetPoints[2 * i + 1] - this.futurePlanetPoints[1];
+      }
+
       this.futureLine.lineTo(
-        camera.scale * (x - camera.x) + (this.app.renderer.width / 2),
-        camera.scale * (y - camera.y) + (this.app.renderer.height / 2)
+        camera.scale * (x - camera.x - planetaryCorrectionX) + (this.app.renderer.width / 2),
+        camera.scale * (y - camera.y - planetaryCorrectionY) + (this.app.renderer.height / 2)
       );
     }
 
