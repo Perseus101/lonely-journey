@@ -21,7 +21,7 @@ export class World {
   camera_scroll_scale_speed = 0.001;
   stars: Stars;
   follow_camera = true;
-  timeAccel = 365 * 24 * 60 / 365; // 1 year in 10 seconds
+  timeAccel = 1000;//365 * 24 * 60 / 365; // 1 year in 10 seconds
   accScroll = 0;
   maxAccScroll = 50;
   thrusterPower = 4;
@@ -51,39 +51,65 @@ export class World {
 
     this.dateElement = document.getElementById("date");
 
+    let timeAccelEl = document.getElementById("time-accel");
+    timeAccelEl.innerHTML = "x" + self.timeAccel;
+
     let speed1El = document.getElementById("speed-1");
     let speed2El = document.getElementById("speed-2");
     let speed3El = document.getElementById("speed-3");
     let speed4El = document.getElementById("speed-4");
     let active = "speed-activated";
+
+    function activateSpeed1() {
+      self.thrusterPower = 1;
+      speed1El.classList.add(active);
+      speed2El.classList.remove(active);
+      speed3El.classList.remove(active);
+      speed4El.classList.remove(active);
+    }
+    function activateSpeed2() {
+      self.thrusterPower = 2;
+      speed1El.classList.remove(active);
+      speed2El.classList.add(active);
+      speed3El.classList.remove(active);
+      speed4El.classList.remove(active);
+    }
+    function activateSpeed3() {
+      self.thrusterPower = 3;
+      speed1El.classList.remove(active);
+      speed2El.classList.remove(active);
+      speed3El.classList.add(active);
+      speed4El.classList.remove(active);
+    }
+    function activateSpeed4() {
+      self.thrusterPower = 4;
+      speed1El.classList.remove(active);
+      speed2El.classList.remove(active);
+      speed3El.classList.remove(active);
+      speed4El.classList.add(active);
+    }
+
+    speed1El.onclick = (e) => { activateSpeed1(); };
+    speed2El.onclick = (e) => { activateSpeed2(); };
+    speed3El.onclick = (e) => { activateSpeed3(); };
+    speed4El.onclick = (e) => { activateSpeed4(); };
+
     window.addEventListener("keydown", function (e) {
-      if (e.code == "Digit1") {
-        self.thrusterPower = 1;
-        speed1El.classList.add(active);
-        speed2El.classList.remove(active);
-        speed3El.classList.remove(active);
-        speed4El.classList.remove(active);
+      if (e.code == "Digit1")
+        activateSpeed1();
+      if (e.code == "Digit2")
+        activateSpeed2();
+      if (e.code == "Digit3")
+        activateSpeed3();
+      if (e.code == "Digit4")
+        activateSpeed4();
+      if (e.code == "Period" && self.timeAccel < 10000) {
+        self.timeAccel *= 10;
+        timeAccelEl.innerHTML = "x" + self.timeAccel;
       }
-      if (e.code == "Digit2") {
-        self.thrusterPower = 2;
-        speed1El.classList.remove(active);
-        speed2El.classList.add(active);
-        speed3El.classList.remove(active);
-        speed4El.classList.remove(active);
-      }
-      if (e.code == "Digit3") {
-        self.thrusterPower = 3;
-        speed1El.classList.remove(active);
-        speed2El.classList.remove(active);
-        speed3El.classList.add(active);
-        speed4El.classList.remove(active);
-      }
-      if (e.code == "Digit4") {
-        self.thrusterPower = 4;
-        speed1El.classList.remove(active);
-        speed2El.classList.remove(active);
-        speed3El.classList.remove(active);
-        speed4El.classList.add(active);
+      if (e.code == "Comma" && self.timeAccel > 1) {
+        self.timeAccel /= 10;
+        timeAccelEl.innerHTML = "x" + self.timeAccel;
       }
     });
   }
@@ -149,7 +175,7 @@ export class World {
       this.accScroll = 0;
     }
 
-    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower);
+    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
 
     if (this.follow_camera) {
       this.camera.x = this.spaceship.x;

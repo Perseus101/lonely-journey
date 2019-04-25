@@ -100,7 +100,8 @@ export class Spaceship extends Sprite implements Body {
     return new PIXI.Sprite(PIXI.loader.resources[SpaceshipTexture].texture);
   }
 
-  update(delta: number, controls: Controls, thrusterPower: number): void {
+  update(delta: number, controls: Controls, thrusterPower: number, timeAccel: number): void {
+    this.timeAccel = timeAccel;
     let xdiff = controls.mouse_x - this.x;
     let ydiff = controls.mouse_y - this.y;
     let angle = Math.atan2(ydiff, xdiff);

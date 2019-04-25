@@ -42,10 +42,14 @@
 
     .speed-option {
       padding: 7px;
+      padding-top: 1px;
+      padding-bottom: 1px;
       border-color: #ffffff44;
       border-radius: 5px;
+      border-width: 2px;
       border-style: solid;
       margin: 5px;
+      z-index: 3;
     }
 
     .speed-option.speed-activated {
@@ -64,16 +68,22 @@
 
     #score-counter {
       margin: 0px;
-      font-size: 40px;
+      font-size: 30px;
     }
 
-    #date-container {
+    #time-container {
+      display: flex;
       right: 0;
       position: fixed;
       z-index: 2;
+      margin: 0;
+      padding: 0;
+    }
+
+    #date-container {
       margin: 5px;
       padding: 5px;
-      width: 9em;
+      width: 8.5em;
       color: #ffffffdd;
       text-align: center;
     }
@@ -83,6 +93,19 @@
       padding-left: 0.15em;
       font-size: 30px;
       text-align: left;
+    }
+
+    #time-accel-container {
+      margin: 5px;
+      padding: 5px;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #time-accel {
+      margin: 0px;
+      padding-left: 0.15em;
+      font-size: 30px;
     }
   </style>
 
@@ -110,9 +133,15 @@
     <p class="hud-title">Score</p>
     <p id="score-counter">0</p>
   </div>
-  <div id="date-container">
-    <p class="hud-title">Date</p>
-    <p id="date">1960-01-01</p>
+  <div id="time-container">
+    <div id="time-accel-container">
+      <p class="hud-title">Time Acceleration</p>
+      <p id="time-accel"></p>
+    </div>
+    <div id="date-container">
+      <p class="hud-title">Date</p>
+      <p id="date">1960-01-01</p>
+    </div>
   </div>
 </body>
 
