@@ -131,27 +131,27 @@ export class Spaceship extends Sprite implements Body {
 
     this.futureLine.clear();
     this.futureLine.lineStyle(2, 0xffffff, 1, 0.5);
-    this.testRocket.clone_into(this);
     this.futureLine.moveTo(
-      camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
-      camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
+      camera.scale * (this.x - camera.x) + (this.app.renderer.width / 2),
+      camera.scale * (this.y - camera.y) + (this.app.renderer.height / 2)
     );
 
     tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
 
+    this.testRocket.clone_into(this);
+
     let num_steps = 60*20;
     for (let i = 0; i < num_steps; i++) {
-      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
-
-      let tickAmt = this.timeAccel * delta;
-      date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
-      closestPlanet.update(date, controls);
-
-      this.futureLine.lineStyle(2, 0xffffff, 1 - i/num_steps, 0.5);
+      this.futureLine.lineStyle(2, 0xffffff, 1 - i / num_steps, 0.5);
       this.futureLine.lineTo(
         camera.scale * (this.testRocket.get_x() - camera.x) + (this.app.renderer.width / 2),
         camera.scale * (this.testRocket.get_y() - camera.y) + (this.app.renderer.height / 2)
       );
+      closestPlanet.update(date, controls);
+      let tickAmt = this.timeAccel * delta;
+      date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
+
+      tick_physics(this.testRocket, 1, this.planetsToConsider, this.timeAccel);
     }
   }
 

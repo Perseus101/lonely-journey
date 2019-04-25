@@ -149,10 +149,10 @@ export class World {
       this.accScroll = 0;
     }
 
+    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.camera, this.date);
     for (let c of this.planets) {
       c.update(this.date, this.remapped_controls);
     }
-    this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.camera, this.date);
 
     this.tractor_beam.update(this.spaceship);
 
