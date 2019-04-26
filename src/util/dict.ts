@@ -35,6 +35,10 @@ export class NearestKeyDict<T> {
             return this.findKeyIndexHelper(key, start, i);
         }
     }
+
+    numKeys(): number {
+        return this.keys.length;
+    }
 }
 
 export default NearestKeyDict;

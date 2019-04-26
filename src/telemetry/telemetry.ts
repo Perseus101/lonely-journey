@@ -69,13 +69,21 @@ export class Telemetry {
             return undefined;
         }
 
-        let beforeKey = this.data.getKey(index - 1);
+        let beforeKey = undefined;
+        if (index >= 2)
+            beforeKey = this.data.getKey(index - 2);
+        let curKey = this.data.getKey(index - 1);
         let afterKey = this.data.getKey(index);
+        let twoAfterKey = undefined;
+        if (index < this.data.numKeys() - 1)
+            twoAfterKey = this.data.getKey(index + 1);
 
         let beforeData = this.data.get(beforeKey);
+        let curData = this.data.get(curKey);
         let afterData = this.data.get(afterKey);
+        let twoAfterData = this.data.get(twoAfterKey);
 
-        return beforeData.interpolate((timestamp - beforeKey) / (afterKey - beforeKey), afterData);
+        return curData.interpolate((timestamp - curKey) / (afterKey - curKey), beforeData, afterData, twoAfterData);
     }
 }
 

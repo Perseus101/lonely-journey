@@ -11,13 +11,13 @@ describe('DataPacket', () => {
     it('can interpolate', () => {
         let d0 = new DataPacket(0, 0);
         let d2 = new DataPacket(2, 2);
-        let d1 = d0.interpolate(0.5, d2);
+        let d1 = d0.interpolate(0.5, undefined, d2, undefined);
 
         expect(d1).to.not.be.null;
         expect(d1.ra).to.equal(1);
         expect(d1.distance).to.equal(1);
 
-        let d = d0.interpolate(0.25, d2);
+        let d = d0.interpolate(0.25, undefined, d2, undefined);
 
         expect(d).to.not.be.null;
         expect(d.ra).to.equal(0.5);
