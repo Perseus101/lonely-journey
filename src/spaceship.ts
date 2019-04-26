@@ -133,12 +133,16 @@ export class Spaceship extends Sprite implements Body {
       this.vx += Math.cos(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
     }
 
-    let closestPlanet = this.planets[1];
-    for (let planet of this.planets.slice(2)) {
-      if (Math.pow(this.x - planet.x, 2) + Math.pow(this.y - planet.y, 2) < Math.pow(this.x - closestPlanet.x, 2) + Math.pow(this.y - closestPlanet.y, 2))
-        closestPlanet = planet;
+    for (let planet of this.planets) {
+      planet.recalcDistance(this.x, this.y);
     }
-    this.planetsToConsider[1] = closestPlanet;
+
+    let closestI = 1;
+    for (let i = 2; i < this.planets.length; i++) {
+      if (this.planets[i].distanceToShip < this.planets[closestI].distanceToShip)
+        closestI = i;
+    }
+    this.planetsToConsider[1] = this.planets[closestI];
 
     tick_physics(this, delta, this.planetsToConsider, this.timeAccel);
   }
@@ -186,7 +190,7 @@ export class Spaceship extends Sprite implements Body {
     furthestDistToPlanet = Math.sqrt(furthestDistToPlanet);
 
     let inOrbit = false;
-    if (furthestDistToPlanet / closestDistToPlanet < 100 && furthestDistToPlanet < 5e9) { //roughly within ellipse ratios, and close enough
+    if (furthestDistToPlanet / closestDistToPlanet < 100 && furthestDistToPlanet < this.planetsToConsider[1].orbitCutoff) { //roughly within ellipse ratios, and close enough
       inOrbit = true;
     }
 

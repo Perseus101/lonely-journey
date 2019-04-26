@@ -223,6 +223,7 @@ export class World {
 
     for (let c of this.planets) {
       c.update(this.date);
+      c.updateDistanceText(this.camera);
     }
 
     // this.tractor_beam.update(this.spaceship);
