@@ -77,7 +77,7 @@ export class GalileoMission extends Mission {
 export class CassiniMission extends Mission {
     constructor(app: PIXI.Application, id: number) {
         super(app, id, new StaticHorizonTelemetrySource(id));
-        this.minScale = 0.15;
+        this.minScale = 0.08;
     }
 
     create_sprite(): PIXI.Sprite {
