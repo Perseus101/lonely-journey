@@ -149,7 +149,8 @@
       justify-content: center;
       position: fixed;
       height: 100%;
-      z-index: 2;
+      z-index: 10;
+      background-color: #00000088;
     }
 
     .key {
@@ -161,21 +162,46 @@
       border-width: 2px;
       border-style: solid;
     }
+
+    .help-list li {
+      margin: 20px;
+    }
   </style>
 
 </head>
 
 <body style="background-color: #111;">
   <div id="help" class="hidden">
-    <h1>Help</h1>
-    <h2>(Press <span class="key">Escape</span> to close)</h2>
+    <h1>Controls</h1>
+    <p>
+      Welcome to <em>A Lonely Journey</em>. Your goal is to orbit each of the major gravitational bodies in the solar system in order to learn all about orbital mechanics.
+    </p>
+
+    <ol class="help-list">
+      <li>
+        To pilot your ship, move the mouse in the direction you want to accelerate, then <em>Click</em> or press <span
+          class="key">Space</span> to accelerate.
+      </li>
+      <li>
+        In the top left is your <em>Thruster Power</em> indicator. Press <span class="key">1</span>, <span class="key">2</span>, <span class="key">3</span>, or <span class="key">4</span> to change how powerful your acceleration is. 4 is the most powerful.
+      </li>
+      <li>
+        To zoom the camera in/out, <em>Scroll</em> or use the <span class="key">Shift</span> and <span class="key">Ctrl</span> keys.
+      </li>
+      <li>
+        To pan the camera, use <span class="key">WASD</span>. You can recenter the camera by pressing <span class="key">C</span>.
+      </li>
+      <li>
+        Press <span class="key">Escape</span> to close this window.
+      </li>
+    </ol>
   </div>
 
   <div class="task-container">
     <p id="you-win" class="hidden">All missions complete. Congratulations.</p>
     <div id="task-list" class="task-container-centered">
-      <p>Current Mission: <span id="current-mission"></span></p>
-      <ol class="task-list">
+      <p>Current Mission: <span id="current-mission">Press <span class="key">Escape</span> to view the controls.</span></p>
+      <ol id="task-numbered-list" class="task-list hidden">
         <li id="task1" class="task"></li>
         <li id="task2" class="task"></li>
         <li id="task3" class="task"></li>

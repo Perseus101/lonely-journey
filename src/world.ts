@@ -34,6 +34,7 @@ export class World {
   timeSpedUp = false;
   timeSlowedDown = false;
   task_tracker: TasksTracker;
+  helpOpen = false;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -78,6 +79,7 @@ export class World {
     let speed3El = document.getElementById("speed-3");
     let speed4El = document.getElementById("speed-4");
     let active = "speed-activated";
+    let helpEl = document.getElementById("help");
 
     function activateSpeed1() {
       self.thrusterPower = 1;
@@ -122,6 +124,13 @@ export class World {
         activateSpeed3();
       if (e.code == "Digit4")
         activateSpeed4();
+      if (e.code == "Escape") {
+        self.helpOpen = !self.helpOpen;
+        if (self.helpOpen)
+          helpEl.classList.remove("hidden");
+        else
+          helpEl.classList.add("hidden");
+      }
     });
   }
 
@@ -138,115 +147,116 @@ export class World {
   }
 
   tick(delta: number, controls: Controls) {
-    delta = 1;
+    if (!this.helpOpen) {
+      delta = 1;
 
-    this.remapped_controls.keys = controls.keys;
-    this.remapped_controls.mouse_down = controls.mouse_down;
-    this.remapped_controls.mouse_x = (controls.mouse_x - this.app.renderer.width / 2) / this.camera.scale + this.camera.x; //transform to world coordinates
-    this.remapped_controls.mouse_y = (controls.mouse_y - this.app.renderer.height / 2) / this.camera.scale + this.camera.y; //transform to world coordinates
+      this.remapped_controls.keys = controls.keys;
+      this.remapped_controls.mouse_down = controls.mouse_down;
+      this.remapped_controls.mouse_x = (controls.mouse_x - this.app.renderer.width / 2) / this.camera.scale + this.camera.x; //transform to world coordinates
+      this.remapped_controls.mouse_y = (controls.mouse_y - this.app.renderer.height / 2) / this.camera.scale + this.camera.y; //transform to world coordinates
 
-    if (controls.keys["Escape"]) {
-      this.camera.x = this.spaceship.x;
-      this.camera.y = this.spaceship.y;
-      this.follow_camera = true;
-    }
-
-    if (controls.keys["KeyW"]) {
-      this.camera.y -= this.camera_speed * delta / this.camera.scale;
-      this.follow_camera = false;
-    }
-    if (controls.keys["KeyS"]) {
-      this.camera.y += this.camera_speed * delta / this.camera.scale;
-      this.follow_camera = false;
-    }
-    if (controls.keys["KeyA"]) {
-      this.camera.x -= this.camera_speed * delta / this.camera.scale;
-      this.follow_camera = false;
-    }
-    if (controls.keys["KeyD"]) {
-      this.camera.x += this.camera_speed * delta / this.camera.scale;
-      this.follow_camera = false;
-    }
-    if (controls.keys["ShiftLeft"]) {
-      this.camera.scale *= 1 + (this.camera_scale_speed * delta);
-    }
-    if (controls.keys["ControlLeft"]) {
-      this.camera.scale *= 1 - (this.camera_scale_speed * delta);
-    }
-    if (this.accScroll != 0) {
-      if (this.accScroll > this.maxAccScroll)
-        this.accScroll = this.maxAccScroll;
-      if (this.accScroll < -this.maxAccScroll)
-        this.accScroll = -this.maxAccScroll;
-      this.camera.scale *= Math.pow(1 + this.camera_scroll_scale_speed * delta, -this.accScroll);
-      this.accScroll = 0;
-    }
-
-    //Attempt to honor controls for slowing down or speeding up time
-    if (controls.keys["Period"] && this.timeAccel < 1000000 && !this.timeSpedUp) {
-      this.timeAccel *= 10;
-      this.timeAccelEl.innerHTML = "x" + this.timeAccel;
-      this.timeSpedUp = true;
-    }
-    if (controls.keys["Comma"] && this.timeAccel > 1 && !this.timeSlowedDown) {
-      this.timeAccel /= 10;
-      this.timeAccelEl.innerHTML = "x" + this.timeAccel;
-      this.timeSlowedDown = true;
-    }
-    if (!controls.keys["Period"])
-      this.timeSpedUp = false;
-    if (!controls.keys["Comma"])
-      this.timeSlowedDown = false;
-
-    cloneIntoBody(this.previousRocket, this.spaceship);
-    while (true) {
-      this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
-
-      if (this.follow_camera) {
+      if (controls.keys["KeyC"]) {
         this.camera.x = this.spaceship.x;
         this.camera.y = this.spaceship.y;
+        this.follow_camera = true;
       }
 
-      let shouldSlowDown = this.spaceship.updateFutureLine(delta, this.remapped_controls, this.camera, this.date);
+      if (controls.keys["KeyW"]) {
+        this.camera.y -= this.camera_speed * delta / this.camera.scale;
+        this.follow_camera = false;
+      }
+      if (controls.keys["KeyS"]) {
+        this.camera.y += this.camera_speed * delta / this.camera.scale;
+        this.follow_camera = false;
+      }
+      if (controls.keys["KeyA"]) {
+        this.camera.x -= this.camera_speed * delta / this.camera.scale;
+        this.follow_camera = false;
+      }
+      if (controls.keys["KeyD"]) {
+        this.camera.x += this.camera_speed * delta / this.camera.scale;
+        this.follow_camera = false;
+      }
+      if (controls.keys["ShiftLeft"]) {
+        this.camera.scale *= 1 + (this.camera_scale_speed * delta);
+      }
+      if (controls.keys["ControlLeft"]) {
+        this.camera.scale *= 1 - (this.camera_scale_speed * delta);
+      }
+      if (this.accScroll != 0) {
+        if (this.accScroll > this.maxAccScroll)
+          this.accScroll = this.maxAccScroll;
+        if (this.accScroll < -this.maxAccScroll)
+          this.accScroll = -this.maxAccScroll;
+        this.camera.scale *= Math.pow(1 + this.camera_scroll_scale_speed * delta, -this.accScroll);
+        this.accScroll = 0;
+      }
 
-      if (shouldSlowDown && this.timeAccel > 1) {
+      //Attempt to honor controls for slowing down or speeding up time
+      if (controls.keys["Period"] && this.timeAccel < 1000000 && !this.timeSpedUp) {
+        this.timeAccel *= 10;
+        this.timeAccelEl.innerHTML = "x" + this.timeAccel;
+        this.timeSpedUp = true;
+      }
+      if (controls.keys["Comma"] && this.timeAccel > 1 && !this.timeSlowedDown) {
         this.timeAccel /= 10;
         this.timeAccelEl.innerHTML = "x" + this.timeAccel;
-        cloneIntoBody(this.spaceship, this.previousRocket);
-        this.timeSpedUp = false;
-      } else {
-        break;
+        this.timeSlowedDown = true;
       }
+      if (!controls.keys["Period"])
+        this.timeSpedUp = false;
+      if (!controls.keys["Comma"])
+        this.timeSlowedDown = false;
+
+      cloneIntoBody(this.previousRocket, this.spaceship);
+      while (true) {
+        this.spaceship.update(delta, this.remapped_controls, this.thrusterPower, this.timeAccel);
+
+        if (this.follow_camera) {
+          this.camera.x = this.spaceship.x;
+          this.camera.y = this.spaceship.y;
+        }
+
+        let shouldSlowDown = this.spaceship.updateFutureLine(delta, this.remapped_controls, this.camera, this.date);
+
+        if (shouldSlowDown && this.timeAccel > 1) {
+          this.timeAccel /= 10;
+          this.timeAccelEl.innerHTML = "x" + this.timeAccel;
+          cloneIntoBody(this.spaceship, this.previousRocket);
+          this.timeSpedUp = false;
+        } else {
+          break;
+        }
+      }
+
+      // Update date based on delta
+      let tickAmt = this.timeAccel * delta;
+      this.date = moment(this.date).add(Math.round(tickAmt), 'seconds').toDate();
+      this.updateDateText()
+
+
+      for (let c of this.planets) {
+        c.update(this.date);
+        c.updateDistanceText(this.camera);
+      }
+
+      // this.tractor_beam.update(this.spaceship);
+
+      this.stars.tick(delta, this.camera);
+      this.spaceship.draw(this.camera);
+
+      for (let c of this.planets) {
+        c.update(this.date);
+        c.draw(this.camera);
+      }
+
+      for (let m of this.missions) {
+        m.update(this.date);
+        m.draw(this.camera);
+      }
+      // this.tractor_beam.draw(this.camera);
     }
-
-    // Update date based on delta
-    let tickAmt = this.timeAccel * delta;
-    this.date = moment(this.date).add(Math.round(tickAmt), 'seconds').toDate();
-    this.updateDateText()
-
-
-    for (let c of this.planets) {
-      c.update(this.date);
-      c.updateDistanceText(this.camera);
-    }
-
-    this.task_tracker.update(this.timeAccel);
-
-    // this.tractor_beam.update(this.spaceship);
-
-    this.stars.tick(delta, this.camera);
-    this.spaceship.draw(this.camera);
-
-    for (let c of this.planets) {
-      c.update(this.date);
-      c.draw(this.camera);
-    }
-
-    for (let m of this.missions) {
-      m.update(this.date);
-      m.draw(this.camera);
-    }
-    // this.tractor_beam.draw(this.camera);
+    this.task_tracker.update(this.timeAccel, this.helpOpen);
   }
 }
 
