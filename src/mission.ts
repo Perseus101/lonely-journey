@@ -61,3 +61,27 @@ export class PioneerMission extends Mission {
         return sprite;
     }
 }
+
+export class GalileoMission extends Mission {
+    constructor(app: PIXI.Application, id: number) {
+        super(app, id, new StaticHorizonTelemetrySource(id), new Date(2003, 8, 21));
+        this.minScale = 0.15;
+    }
+
+    create_sprite(): PIXI.Sprite {
+        let sprite = new PIXI.Sprite(PIXI.loader.resources[require('./images/galileo.png')].texture);
+        return sprite;
+    }
+}
+
+export class CassiniMission extends Mission {
+    constructor(app: PIXI.Application, id: number) {
+        super(app, id, new StaticHorizonTelemetrySource(id));
+        this.minScale = 0.15;
+    }
+
+    create_sprite(): PIXI.Sprite {
+        let sprite = new PIXI.Sprite(PIXI.loader.resources[require('./images/cassini.png')].texture);
+        return sprite;
+    }
+}
