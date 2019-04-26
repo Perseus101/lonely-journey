@@ -74,7 +74,7 @@ export class TestRocket implements Body {
 }
 
 export class Spaceship extends Sprite implements Body {
-  vx = -30000;
+  vx = 13e3;
   vy = 0;
   accel1 = 1e-3 * 52560;
   accel2 = 2e-3 * 52560;
@@ -87,6 +87,8 @@ export class Spaceship extends Sprite implements Body {
   futureLine: PIXI.Graphics;
   futureLinePoints: number[] = [];
   futurePlanetPoints: number[] = [];
+  closestDistToPlanet: number;
+  furthestDistToPlanet: number;
 
   constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
     super(app);
@@ -94,8 +96,10 @@ export class Spaceship extends Sprite implements Body {
     this.planets = planets;
     this.planetsToConsider = [planets[0], planets[1]];
     this.timeAccel = timeAccel;
-    this.x = 0;
-    this.y = 150000000000;
+    this.x = -300000000000;
+    this.y = -766000000000;
+    // this.x = 0;
+    // this.y = 150000000000;
 
     this.futureLine = new PIXI.Graphics();
     app.stage.addChild(this.futureLine);
@@ -164,17 +168,17 @@ export class Spaceship extends Sprite implements Body {
 
     let num_steps = 60 * 20;
     let accelWarningHitIndex = Number.MAX_SAFE_INTEGER;
-    let closestDistToPlanet = Number.MAX_SAFE_INTEGER;
-    let furthestDistToPlanet = 0;
+    this.closestDistToPlanet = Number.MAX_SAFE_INTEGER;
+    this.furthestDistToPlanet = 0;
     for (let i = 0; i < num_steps; i++) {
       this.futureLinePoints.push(this.testRocket.get_x(), this.testRocket.get_y());
       this.futurePlanetPoints.push(this.planetsToConsider[1].x, this.planetsToConsider[1].y);
 
       let dist = Math.pow(this.planetsToConsider[1].x - this.testRocket.get_x(), 2) + Math.pow(this.planetsToConsider[1].y - this.testRocket.get_y(), 2);
-      if (dist < closestDistToPlanet)
-        closestDistToPlanet = dist;
-      if (dist > furthestDistToPlanet)
-        furthestDistToPlanet = dist;
+      if (dist < this.closestDistToPlanet)
+        this.closestDistToPlanet = dist;
+      if (dist > this.furthestDistToPlanet)
+        this.furthestDistToPlanet = dist;
 
       let tickAmt = this.timeAccel * delta;
       date = moment(date).add(Math.round(tickAmt), 'seconds').toDate();
@@ -186,11 +190,11 @@ export class Spaceship extends Sprite implements Body {
     }
 
     //convert from squared distance
-    closestDistToPlanet = Math.sqrt(closestDistToPlanet);
-    furthestDistToPlanet = Math.sqrt(furthestDistToPlanet);
+    this.closestDistToPlanet = Math.sqrt(this.closestDistToPlanet);
+    this.furthestDistToPlanet = Math.sqrt(this.furthestDistToPlanet);
 
     let inOrbit = false;
-    if (furthestDistToPlanet / closestDistToPlanet < 100 && furthestDistToPlanet < this.planetsToConsider[1].orbitCutoff) { //roughly within ellipse ratios, and close enough
+    if (this.furthestDistToPlanet / this.closestDistToPlanet < 100 && this.furthestDistToPlanet < this.planetsToConsider[1].orbitCutoff) { //roughly within ellipse ratios, and close enough
       inOrbit = true;
     }
 

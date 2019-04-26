@@ -107,11 +107,56 @@
       padding-left: 0.15em;
       font-size: 30px;
     }
+
+    .task-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: fixed;
+      height: 100vh;
+      z-index: 2;
+      font-size: 12px;
+    }
+
+    .task-container-centered {
+      margin-left: 10px;
+      color: #ffffffdd;
+    }
+
+    .task-list {
+
+    }
+
+    .task {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .task.task-complete {
+      color: #99ff99dd;
+    }
+
+    .hidden {
+      visibility: hidden;
+    }
   </style>
 
 </head>
 
 <body style="background-color: #111;">
+  <div class="task-container">
+    <p id="you-win" class="hidden">All missions complete. Congratulations.</p>
+    <div id="task-list" class="task-container-centered">
+      <p>Current Mission: <span id="current-mission"></span></p>
+      <ol class="task-list">
+        <li id="task1" class="task"></li>
+        <li id="task2" class="task"></li>
+        <li id="task3" class="task"></li>
+      </ol>
+      <p id="mission-complete" class="hidden">Mission Complete &#9989;</p>
+    </div>
+  </div>
+
   <div id="thruster-power">
     <p class="hud-title">Thruster Power</p>
     <div id="speed-indicator">
@@ -121,10 +166,10 @@
       <div id="speed-2" class="speed-option">
         2
       </div>
-      <div id="speed-3" class="speed-option speed">
+      <div id="speed-3" class="speed-option speed-activated">
         3
       </div>
-      <div id="speed-4" class="speed-option speed-activated">
+      <div id="speed-4" class="speed-option">
         4
       </div>
     </div>
@@ -136,7 +181,7 @@
   <div id="time-container">
     <div id="time-accel-container">
       <p class="hud-title">Time Acceleration</p>
-      <p id="time-accel"></p>
+      <p id="time-accel">x1000</p>
     </div>
     <div id="date-container">
       <p class="hud-title">Date</p>

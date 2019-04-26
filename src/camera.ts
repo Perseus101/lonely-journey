@@ -1,5 +1,5 @@
 export class Camera {
-  public scale = 1/(5*100000000);
+  public scale = 2/(5*100000000);
   public x = 0;
   public y = 0;
 

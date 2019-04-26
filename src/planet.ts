@@ -13,6 +13,7 @@ import * as NeptuneTexture from './images/neptune.png';
 import Telemetry from './telemetry/telemetry';
 import { OrbitingBody } from './orbit';
 import Camera from './camera';
+import { distance_format } from './util/dist_format';
 
 
 export abstract class Planet extends OrbitingBody {
@@ -23,6 +24,7 @@ export abstract class Planet extends OrbitingBody {
   distanceText: PIXI.Text;
   recommendedOrbit: number;
   recommendedTimeAccel: number;
+  name: String;
 
   constructor(app: PIXI.Application) {
     super(app);
@@ -44,21 +46,7 @@ export abstract class Planet extends OrbitingBody {
     this.distanceText.x = screenX;
     this.distanceText.y = screenY - (this.pixi_sprite.height / 2) - 1.25*this.distanceText.height;
 
-    let prefix = '';
-    let number = '';
-    if (this.distanceToShip > 1e9) {
-      prefix = 'billion';
-      number = (this.distanceToShip / 1e9).toFixed(1);
-    } else if (this.distanceToShip > 1e6) {
-      prefix = 'million';
-      number = (this.distanceToShip / 1e6).toFixed(1);
-    } else if (this.distanceToShip > 1e3) {
-      prefix = 'k';
-      number = (this.distanceToShip / 1e3).toFixed(1);
-    } else {
-      number = this.distanceToShip.toFixed(1);
-    }
-    this.distanceText.text = number + ' ' + prefix + ' m';
+    this.distanceText.text = distance_format(this.distanceToShip, false);
   }
 
   recalcDistance(x: number, y: number) {
@@ -70,6 +58,7 @@ export abstract class Planet extends OrbitingBody {
 }
 
 export class Sun extends Planet {
+  name = "The Sun";
   mass = 1.9891e30;
   orbitCutoff = 1e12;
   recommendedOrbit = 250e9;
@@ -95,6 +84,7 @@ export class Sun extends Planet {
 }
 
 export class Mercury extends Planet {
+  name = "Mercury";
   mass = 3.285e23;
   orbitCutoff = 15e6;
   recommendedOrbit = 7e6;
@@ -114,6 +104,7 @@ export class Mercury extends Planet {
 }
 
 export class Venus extends Planet {
+  name = "Venus";
   mass = 4.867e24;
   orbitCutoff = 60e6;
   recommendedOrbit = 30e6;
@@ -133,6 +124,7 @@ export class Venus extends Planet {
 }
 
 export class Earth extends Planet {
+  name = "Earth";
   mass = 5.972e24;
   orbitCutoff = 100e6;
   recommendedOrbit = 50e6;
@@ -152,6 +144,7 @@ export class Earth extends Planet {
 }
 
 export class Mars extends Planet {
+  name = "Mars";
   mass = 6.39e23;
   orbitCutoff = 50e6; //x100
   recommendedOrbit = 30e6;
@@ -171,10 +164,11 @@ export class Mars extends Planet {
 }
 
 export class Jupiter extends Planet {
+  name = "Jupiter";
   mass = 1.9e27;
   orbitCutoff = 10e9; //x10,000
   recommendedOrbit = 3e9;
-  recommendedTimeAccel = 10000;
+  recommendedTimeAccel = 1000;
 
   setup() {
     this.telemetry = new Telemetry(599);
@@ -190,6 +184,7 @@ export class Jupiter extends Planet {
 }
 
 export class Saturn extends Planet {
+  name = "Saturn";
   mass = 5.683e26;
   orbitCutoff = 10e9; //x10,000
   recommendedOrbit = 3e9;
@@ -209,6 +204,7 @@ export class Saturn extends Planet {
 }
 
 export class Uranus extends Planet {
+  name = "Uranus";
   mass = 8.681e25;
   orbitCutoff = 7e9; //10,000, 100,000 is ok
   recommendedOrbit = 3e9;
@@ -228,6 +224,7 @@ export class Uranus extends Planet {
 }
 
 export class Neptune extends Planet {
+  name = "Neptune";
   mass = 1.024e26;
   orbitCutoff = 8e9; //100,000 ok
   recommendedOrbit = 3e9;

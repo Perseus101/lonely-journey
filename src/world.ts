@@ -7,6 +7,7 @@ import Stars from "./stars";
 import { Planet, Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune } from "./planet";
 import TractorBeam from "./tractor_beam";
 import { Mission, VoyagerMission, MarinerMission, PioneerMission } from './mission';
+import { TasksTracker } from './task_tracker';
 
 export class World {
   app: PIXI.Application;
@@ -26,12 +27,13 @@ export class World {
   timeAccel = 1000;//365 * 24 * 60 / 365; // 1 year in 10 seconds
   accScroll = 0;
   maxAccScroll = 50;
-  thrusterPower = 4;
+  thrusterPower = 3;
   dateElement: Element;
   previousRocket: TestRocket;
   timeAccelEl = document.getElementById("time-accel");
   timeSpedUp = false;
   timeSlowedDown = false;
+  task_tracker: TasksTracker;
 
   constructor(app: PIXI.Application) {
     this.app = app;
@@ -59,6 +61,8 @@ export class World {
     this.spaceship = new Spaceship(app, this.planets, this.timeAccel);
     this.previousRocket = new TestRocket();
     // this.tractor_beam = new TractorBeam(app);
+
+    this.task_tracker = new TasksTracker(this.spaceship, this.planets);
 
     var self = this;
     window.addEventListener("wheel", function(e: any) {
@@ -225,6 +229,8 @@ export class World {
       c.update(this.date);
       c.updateDistanceText(this.camera);
     }
+
+    this.task_tracker.update(this.timeAccel);
 
     // this.tractor_beam.update(this.spaceship);
 
