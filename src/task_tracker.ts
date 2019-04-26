@@ -25,7 +25,7 @@ export class TasksTracker {
       (window as any).ny = planet.y;
 
       let closeEnough = planet.distanceToShip < planet.recommendedOrbit;
-      let correctTimeAccel = timeAccel == planet.recommendedTimeAccel;
+      let correctTimeAccel = timeAccel <= planet.recommendedTimeAccel;
       let furthestPointOfOrbit = this.ship.furthestDistToPlanet;
       let furthestPointOfOrbitCutoff = (planet.orbitCutoff + planet.recommendedOrbit) / 2;
       let staysCloseEnough = furthestPointOfOrbit < furthestPointOfOrbitCutoff
@@ -34,7 +34,7 @@ export class TasksTracker {
       let taskComplete = closeEnough && correctTimeAccel && inOrbit;
 
       let closeEnoughMsg = "Get within " + distance_format(planet.recommendedOrbit) + " of " + planet.name + ".<p>Current distance: " + distance_format(planet.distanceToShip) + ".</p>";
-      let correctTimeAccelMsg = "Set time acceleration to " + planet.recommendedTimeAccel + ".<p>(Change by pressing , and .)</p>";
+      let correctTimeAccelMsg = "Set time acceleration to " + planet.recommendedTimeAccel + " or less.<p>(Change by pressing , and .)</p>";
       let inOrbitMsg = "Establish an orbit."
       if (closeEnough && correctTimeAccel) {
         if (!staysCloseEnough) {

@@ -113,7 +113,7 @@
       flex-direction: column;
       justify-content: center;
       position: fixed;
-      height: 100vh;
+      height: 100%;
       z-index: 2;
       font-size: 12px;
     }
@@ -139,11 +139,38 @@
     .hidden {
       visibility: hidden;
     }
+
+    #help {
+      margin: auto;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: fixed;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .key {
+      padding: 7px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      border-color: #ffffff44;
+      border-radius: 5px;
+      border-width: 2px;
+      border-style: solid;
+    }
   </style>
 
 </head>
 
 <body style="background-color: #111;">
+  <div id="help" class="hidden">
+    <h1>Help</h1>
+    <h2>(Press <span class="key">Escape</span> to close)</h2>
+  </div>
+
   <div class="task-container">
     <p id="you-win" class="hidden">All missions complete. Congratulations.</p>
     <div id="task-list" class="task-container-centered">
