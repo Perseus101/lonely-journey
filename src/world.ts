@@ -211,7 +211,7 @@ export class World {
       }
 
       //Attempt to honor controls for slowing down or speeding up time
-      if (controls.keys["Period"] && this.timeAccel < 1000000 && !this.timeSpedUp) {
+      if (controls.keys["Period"] && this.timeAccel < 100000 && !this.timeSpedUp) {
         this.timeAccel *= 10;
         this.timeAccelEl.innerHTML = "x" + this.timeAccel;
         this.timeSpedUp = true;
