@@ -172,7 +172,7 @@
 
 <body style="background-color: #111;">
   <div id="help" class="hidden">
-    <h1>Controls</h1>
+    <h1>How to Play</h1>
     <p>
       Welcome to <em>A Lonely Journey</em>. Your goal is to orbit each of the major gravitational bodies in the solar system in order to learn all about orbital mechanics.
     </p>
@@ -183,13 +183,19 @@
           class="key">Space</span> to accelerate.
       </li>
       <li>
-        In the top left is your <em>Thruster Power</em> indicator. Press <span class="key">1</span>, <span class="key">2</span>, <span class="key">3</span>, or <span class="key">4</span> to change how powerful your acceleration is. 4 is the most powerful.
+        In the top left is your <em>Thruster Power</em> indicator. Press <span class="key">1</span>, <span class="key">2</span>, <span class="key">3</span>, <span class="key">4</span>, or <span class="key">5</span> to change how powerful your acceleration is. 5 is the most powerful.
       </li>
       <li>
         To zoom the camera in/out, <em>Scroll</em> or use the <span class="key">Shift</span> and <span class="key">Ctrl</span> keys.
       </li>
       <li>
         To pan the camera, use <span class="key">WASD</span>. You can recenter the camera by pressing <span class="key">C</span>.
+      </li>
+      <li>
+        You can change the rate at which time passes by pressing <span class="key">,</span> (comma) or <span class="key">.</span> (period).
+      </li>
+      <li>
+        Tip: If you get too close to a gravitational body, the game will force a slower time rate so it can continue to simulate accurately. If you're stuck at a slow time rate, get further away from gravitational bodies.
       </li>
       <li>
         Press <span class="key">Escape</span> to close this window.
@@ -200,7 +206,7 @@
   <div class="task-container">
     <h3 id="you-win" style="margin-left: 25px;" class="hidden">All missions complete. Congratulations. Total fuel used: <span id="final-score"></span></h3>
     <div id="task-list" class="task-container-centered">
-      <p>Current Mission: <span id="current-mission">Press <span class="key">Escape</span> to view the controls.</span></p>
+      <p>Current Mission: <span id="current-mission">Press <span class="key">Escape</span> to read how to play.</span></p>
       <ol id="task-numbered-list" class="task-list hidden">
         <li id="task1" class="task"></li>
         <li id="task2" class="task"></li>
@@ -229,11 +235,14 @@
       <div id="speed-4" class="speed-option">
         4
       </div>
+      <div id="speed-5" class="speed-option">
+        5
+      </div>
     </div>
   </div>
   <div id="time-container">
     <div id="time-accel-container">
-      <p class="hud-title">Time Acceleration</p>
+      <p class="hud-title">Rate of Time</p>
       <p id="time-accel">x1000</p>
     </div>
     <div id="date-container">

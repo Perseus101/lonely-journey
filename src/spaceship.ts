@@ -80,6 +80,7 @@ export class Spaceship extends Sprite implements Body {
   accel2 = 2e-3 * 52560;
   accel3 = 1e-2 * 52560;
   accel4 = 5e-2 * 52560;
+  accel5 = 25e-2 * 52560;
   planets: Planet[];
   planetsToConsider: Planet[];
   timeAccel: number;
@@ -133,6 +134,8 @@ export class Spaceship extends Sprite implements Body {
         accel = this.accel3;
       else if (thrusterPower == 4)
         accel = this.accel4;
+      else if (thrusterPower == 5)
+        accel = this.accel5;
       else
         throw "Error, thrusterPower must be 1, 2, 3, or 4. Was " + thrusterPower;
       this.vy += Math.sin(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale

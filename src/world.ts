@@ -80,6 +80,7 @@ export class World {
     let speed2El = document.getElementById("speed-2");
     let speed3El = document.getElementById("speed-3");
     let speed4El = document.getElementById("speed-4");
+    let speed5El = document.getElementById("speed-5");
     let active = "speed-activated";
     let helpEl = document.getElementById("help");
 
@@ -89,6 +90,7 @@ export class World {
       speed2El.classList.remove(active);
       speed3El.classList.remove(active);
       speed4El.classList.remove(active);
+      speed5El.classList.remove(active);
     }
     function activateSpeed2() {
       self.thrusterPower = 2;
@@ -96,6 +98,7 @@ export class World {
       speed2El.classList.add(active);
       speed3El.classList.remove(active);
       speed4El.classList.remove(active);
+      speed5El.classList.remove(active);
     }
     function activateSpeed3() {
       self.thrusterPower = 3;
@@ -103,6 +106,7 @@ export class World {
       speed2El.classList.remove(active);
       speed3El.classList.add(active);
       speed4El.classList.remove(active);
+      speed5El.classList.remove(active);
     }
     function activateSpeed4() {
       self.thrusterPower = 4;
@@ -110,12 +114,22 @@ export class World {
       speed2El.classList.remove(active);
       speed3El.classList.remove(active);
       speed4El.classList.add(active);
+      speed5El.classList.remove(active);
+    }
+    function activateSpeed5() {
+      self.thrusterPower = 5;
+      speed1El.classList.remove(active);
+      speed2El.classList.remove(active);
+      speed3El.classList.remove(active);
+      speed4El.classList.remove(active);
+      speed5El.classList.add(active);
     }
 
     speed1El.onclick = (e) => { activateSpeed1(); };
     speed2El.onclick = (e) => { activateSpeed2(); };
     speed3El.onclick = (e) => { activateSpeed3(); };
     speed4El.onclick = (e) => { activateSpeed4(); };
+    speed5El.onclick = (e) => { activateSpeed5(); };
 
     window.addEventListener("keydown", function (e) {
       if (e.code == "Digit1")
@@ -126,6 +140,8 @@ export class World {
         activateSpeed3();
       if (e.code == "Digit4")
         activateSpeed4();
+      if (e.code == "Digit5")
+        activateSpeed5();
       if (e.code == "Escape") {
         self.helpOpen = !self.helpOpen;
         if (self.helpOpen)
