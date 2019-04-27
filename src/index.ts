@@ -14,6 +14,8 @@ import * as NeptuneTexture from './images/neptune.png';
 import * as VoyagerTexture from './images/voyager.png';
 import * as MarinerTexture from './images/mariner2.png';
 import * as PioneerTexture from './images/pioneer10.png';
+import * as GalileoTexture from './images/galileo.png';
+import * as CassiniTexture from './images/cassini.png';
 
 import World from './world';
 import {Controls, KeyMap} from './controls';
@@ -85,6 +87,8 @@ PIXI.loader
   .add(VoyagerTexture)
   .add(MarinerTexture)
   .add(PioneerTexture)
+  .add(GalileoTexture)
+  .add(CassiniTexture)
   .load(setup);
 
   //This `setup` function will run when the image has loaded

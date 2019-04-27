@@ -1,0 +1,37 @@
+ Revised: Feb 23, 2008   Galileo Spacecraft (Orbiter) / (Sun, Jupiter)     -77
+                           http://solarsystem.nasa.gov/galileo/
+
+ LAUNCHED      : Oct 18, 1989 (STS-34, Atlantis)  LAUNCH MASS:  2223 kg 
+ END OF MISSION: Sep 21, 2003 
+
+ Galileo plunged into Jupiter's crushing atmosphere on Sept. 21, 2003.  The 
+ spacecraft was deliberately destroyed at the end of the mission to protect one 
+ of its own discoveries - a possible ocean beneath the icy crust of the moon 
+ Europa.  34 Jupiter orbits completed; 4,631,778,000 km traveled.
+
+ Interplanetary phase main events:
+  Venus flyby     : Feb 10, 1990           Earth-1 flyby: Dec 8, 1990
+  951 Gaspra flyby: Oct 29, 1991           Earth-2 flyby: Dec 8, 1992
+  243 Ida flyby   : Aug 28, 1993           SL-9 impacts : Jul 16-22, 1994 
+  Probe separation: Jul 13, 1995           ARRIVAL      : Dec 7, 1995 (Jupiter)
+
+ SPACECRAFT PHYSICAL CHARACTERISTICS:
+  Overall height         = 5.3 m           Science instrument mass= 118 kg
+  Fuel mass              = 925 kg (launch) Magnetometer boom      = 11 m
+  High-gain antenna diam = 4.8 m           Dual RTG power output  = 570 watts
+  RTG power decay rate   = -0.6 watts/mnth Total power at arrival = 493 watts
+ 
+ TELECOMMUNICATIONS:
+  Inoperative HGA        = 134 kb/sec      Actual (using low-gain)= 160 bits/s
+
+ PROPULSION:
+  One 400-newton main engine, twelve 10-newton thrusters.
+
+ SPACECRAFT TRAJECTORY:
+  Trajectory provided by Navigation Team (JPL). Data fit: 1989 to Aug 12, 2002,
+  baseline predicts thereafter. Merged trajectories:
+
+     Interplanetary Mission:           S970311A    (19-OCT-1989 to 02-JUL-1995)
+     Primary Mission:                  S980326B    (30-JUN-1995 to 01-DEC-1997)
+     Galileo Extended Mission (GEM)    S000131A    (01-DEC-1997 to 01-FEB-2000)
+     Galileo Millennium Mission (GMM)  S030916A    (01-FEB-2000 to 30-SEP-2003)
