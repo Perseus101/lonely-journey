@@ -89,6 +89,8 @@ export class Spaceship extends Sprite implements Body {
   futurePlanetPoints: number[] = [];
   closestDistToPlanet: number;
   furthestDistToPlanet: number;
+  fuelUsed = 0;
+  fuelIndicatorEl = document.getElementById("score-counter");
 
   constructor(app: PIXI.Application, planets: Planet[], timeAccel: number) {
     super(app);
@@ -135,6 +137,8 @@ export class Spaceship extends Sprite implements Body {
         throw "Error, thrusterPower must be 1, 2, 3, or 4. Was " + thrusterPower;
       this.vy += Math.sin(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
       this.vx += Math.cos(angle) * delta * accel; //accel is independent of "timeAccel" so that it's a natural speed at any timescale
+      this.fuelUsed += (delta * accel) / 10000;
+      this.fuelIndicatorEl.innerHTML = this.fuelUsed.toFixed(1);
     }
 
     for (let planet of this.planets) {

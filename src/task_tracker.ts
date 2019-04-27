@@ -4,7 +4,7 @@ import { distance_format } from "./util/dist_format";
 
 export class TasksTracker {
   currentPlanet: number = undefined;
-  missionOrder = [5, 6, 7, 8, 4, 3, 2, 1, 0];
+  missionOrder = [5, 6, 7, 8, 4, 3, 2, 1];
   questCompleteDelay = -1;
   task1 = document.getElementById("task1");
   task2 = document.getElementById("task2");
@@ -88,6 +88,7 @@ export class TasksTracker {
           this.currentPlanet = this.missionOrder.shift();
           if (!this.currentPlanet) {
             this.youWinElement.classList.remove("hidden");
+            document.getElementById("final-score").innerHTML = this.ship.fuelUsed.toFixed(2);
             this.taskListElement.classList.add("hidden");
           }
         } else if (!this.completeElement.classList.contains("hidden")) {
