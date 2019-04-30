@@ -12,7 +12,7 @@ const plugins = [
     }
   }),
   new HtmlWebpackPlugin({
-    title: 'Typescript Webpack Starter',
+    title: 'A Lonely Journey',
     template: '!!ejs-loader!src/index.html'
   }),
   new MomentLocalesPlugin(),
