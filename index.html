@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    Typescript Webpack Starter
+  </title>
+
+  <meta name="description" content="Typescript Webpack Starter">
+  <link href="https://fonts.googleapis.com/css?family=Rajdhani" rel="stylesheet">
+
+  <style>
+    body, canvas {
+      padding: 0;
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      color: white;
+    }
+
+    #thruster-power {
+      position: fixed;
+      z-index: 2;
+      margin: 5px;
+      padding: 5px;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    .hud-title {
+      margin: 0;
+    }
+
+    #speed-indicator {
+      display: flex;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .speed-option {
+      padding: 7px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      border-color: #ffffff44;
+      border-radius: 5px;
+      border-width: 2px;
+      border-style: solid;
+      margin: 5px;
+      z-index: 3;
+    }
+
+    .speed-option.speed-activated {
+      border-color: #ffffffdd;
+    }
+
+    #score-container {
+      position: fixed;
+      z-index: 2;
+      width: 100%;
+      margin: 5px;
+      padding: 5px;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #score-counter {
+      margin: 0px;
+      font-size: 30px;
+    }
+
+    #time-container {
+      display: flex;
+      right: 0;
+      position: fixed;
+      z-index: 2;
+      margin: 0;
+      padding: 0;
+    }
+
+    #date-container {
+      margin: 5px;
+      padding: 5px;
+      width: 8.5em;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #date {
+      margin: 0px;
+      padding-left: 0.15em;
+      font-size: 30px;
+      text-align: left;
+    }
+
+    #time-accel-container {
+      margin: 5px;
+      padding: 5px;
+      color: #ffffffdd;
+      text-align: center;
+    }
+
+    #time-accel {
+      margin: 0px;
+      padding-left: 0.15em;
+      font-size: 30px;
+    }
+
+    .task-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: fixed;
+      height: 100%;
+      z-index: 2;
+      font-size: 12px;
+    }
+
+    .task-container-centered {
+      margin-left: 10px;
+      color: #ffffffdd;
+    }
+
+    .task-list {
+
+    }
+
+    .task {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .task.task-complete {
+      color: #99ff99dd;
+    }
+
+    .hidden {
+      visibility: hidden;
+    }
+
+    #help {
+      margin: auto;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: fixed;
+      height: 100%;
+      z-index: 10;
+      background-color: #00000088;
+    }
+
+    .key {
+      padding: 7px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      border-color: #ffffff44;
+      border-radius: 5px;
+      border-width: 2px;
+      border-style: solid;
+    }
+
+    .help-list li {
+      margin: 20px;
+    }
+  </style>
+
+</head>
+
+<body style="background-color: #111;">
+  <div id="help" class="hidden">
+    <h1>How to Play</h1>
+    <p>
+      Welcome to <em>A Lonely Journey</em>. Your goal is to orbit each of the major gravitational bodies in the solar system in order to learn all about orbital mechanics.
+    </p>
+
+    <ol class="help-list">
+      <li>
+        To pilot your ship, move the mouse in the direction you want to accelerate, then <em>Click</em> or press <span
+          class="key">Space</span> to accelerate.
+      </li>
+      <li>
+        In the top left is your <em>Thruster Power</em> indicator. Press <span class="key">1</span>, <span class="key">2</span>, <span class="key">3</span>, <span class="key">4</span>, or <span class="key">5</span> to change how powerful your acceleration is. 5 is the most powerful.
+      </li>
+      <li>
+        To zoom the camera in/out, <em>Scroll</em> or use the <span class="key">Shift</span> and <span class="key">Ctrl</span> keys.
+      </li>
+      <li>
+        To pan the camera, use <span class="key">WASD</span>. You can recenter the camera by pressing <span class="key">C</span>.
+      </li>
+      <li>
+        You can change the rate at which time passes by pressing <span class="key">,</span> (comma) or <span class="key">.</span> (period).
+      </li>
+      <li>
+        Tip: If you get too close to a gravitational body, the game will force a slower time rate so it can continue to simulate accurately. If you're stuck at a slow time rate, get further away from gravitational bodies.
+      </li>
+      <li>
+        Press <span class="key">Escape</span> to close this window.
+      </li>
+    </ol>
+  </div>
+
+  <div class="task-container">
+    <h3 id="you-win" style="margin-left: 25px;" class="hidden">All missions complete. Congratulations. Total fuel used: <span id="final-score"></span></h3>
+    <div id="task-list" class="task-container-centered">
+      <p>Current Mission: <span id="current-mission">Press <span class="key">Escape</span> to read how to play.</span></p>
+      <ol id="task-numbered-list" class="task-list hidden">
+        <li id="task1" class="task"></li>
+        <li id="task2" class="task"></li>
+        <li id="task3" class="task"></li>
+      </ol>
+      <p id="mission-complete" class="hidden">Mission Complete &#9989;</p>
+    </div>
+  </div>
+
+  <div id="score-container">
+    <p class="hud-title">Fuel Used</p>
+    <p id="score-counter">0</p>
+  </div>
+  <div id="thruster-power">
+    <p class="hud-title">Thruster Power</p>
+    <div id="speed-indicator">
+      <div id="speed-1" class="speed-option">
+        1
+      </div>
+      <div id="speed-2" class="speed-option">
+        2
+      </div>
+      <div id="speed-3" class="speed-option speed-activated">
+        3
+      </div>
+      <div id="speed-4" class="speed-option">
+        4
+      </div>
+      <div id="speed-5" class="speed-option">
+        5
+      </div>
+    </div>
+  </div>
+  <div id="time-container">
+    <div id="time-accel-container">
+      <p class="hud-title">Rate of Time</p>
+      <p id="time-accel">x1000</p>
+    </div>
+    <div id="date-container">
+      <p class="hud-title">Date</p>
+      <p id="date">1960-01-01</p>
+    </div>
+  </div>
+<script type="text/javascript" src="app.bundle.js"></script></body>
+
+</html>
